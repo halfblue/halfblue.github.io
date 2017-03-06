@@ -151,6 +151,147 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-openvasa使用排坑" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/06/openvasa使用排坑/">openvasa使用排坑</a>
+    </h1>
+  
+
+        
+        <a href="/2017/03/06/openvasa使用排坑/" class="archive-article-date">
+  	<time datetime="2017-03-06T04:03:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>学校实验课，给分了个openvas使用，本来以为打开用就行了，开源的东西还有点麻烦。不过反正也没用过这种大扫描器，最多用wvs，学一下看看好不好用。等什么时候也用过nessus对比一下。<br>kali下面是直接安装好的，不过要配置。首先配置证书</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">root@kali:~<span class="comment"># cd /usr/share/openvas/</span></div><div class="line">root@kali:/usr/share/openvas<span class="comment"># openvas-mkcert</span></div></pre></td></tr></table></figure>
+<p>不用配置一路enter就可以</p>
+<p>然后更新程序数据库，包括漏洞库之类的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">root@kali:/usr/share/openvas<span class="comment"># openvas-nvt-sync</span></div></pre></td></tr></table></figure>
+<p>这里最开始我会卡在md5校验那，后来去图书馆的时候就好了，开始怀疑是网站在墙外，不过应该只是跟网络状态有关系。</p>
+<p>然后是创建用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">openvas-mkcert-client -n om -i</div></pre></td></tr></table></figure>
+<p>这里前面都正常，最后一步失败了，显示have to copy by hands什么的，查了半天也没太明白，后来解决方法是openvas-setup这个命令会指引下一步干嘛，照着敲就行了</p>
+<p>然后重建数据库,加载插件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">root@kali:/usr/share/openvas<span class="comment"># openvasmd –-rebuild</span></div><div class="line">root@kali:/usr/share/openvas<span class="comment"># openvassd</span></div><div class="line">root@kali:/usr/share/openvas<span class="comment"># openvasmd --rebuild</span></div><div class="line">root@kali:/usr/share/openvas<span class="comment"># openvasmd –backup</span></div></pre></td></tr></table></figure>
+<p>创建用户，网上的可能是版本不对</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">oot@kali:~<span class="comment"># openvasmd --create-user admin --role Admin</span></div></pre></td></tr></table></figure>
+<p>这样会创建一个admin，密码是程序随机生成的，登陆上去可以改</p>
+<p>然后配置端口就可以从浏览器访问了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">openvasmd -p 9390 <span class="_">-a</span> 127.0.0.1</div><div class="line">openvasmd <span class="_">-a</span> 127.0.0.1 -p 9393</div><div class="line">gsad --http-only --listen=127.0.0.1 -p 9392</div></pre></td></tr></table></figure>
+<p>扫描就没什么太多说的，拿鼠标点就行了。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list">
+			 
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
+        </li>
+      
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/03/06/openvasa使用排坑/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-服务器卡权限的绕过" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/01/服务器卡权限的绕过/">服务器卡权限绕过</a>
+    </h1>
+  
+
+        
+        <a href="/2017/03/01/服务器卡权限的绕过/" class="archive-article-date">
+  	<time datetime="2017-03-01T14:47:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>昨天志新桥西发了一个系统，漏洞奇多。JSP+MYSQL，登陆界面有注入，注入后发现有弱密码账号密码都是1。想有没有办法拿个shell什么的。<br>先是试了sqlmap的os-shell，基本用不了。上传不了文件，命令差不多只能执行dir。然后想还是sqlmap，有个file-write写个大马小马，但是写过去都有问题，解析不出来。<br>后来北科大第一黑客直接上wvs扫除200多个高危，不过都是struts开发模式。发现有struts02016远程命令执行。在login.jsp不行，需要在Login.action不是很懂。但是也很蛋疼，执行不了几个命令。大致看了下，有whoami显示是system，system你还啥也干不了…<br>net user显示有administrator和guest。net user /add失败。net user guest失败。目录页切换不了。因为传不了文件，感觉提权也没啥希望。<br>后来随便试了几下发现可以net user guest /active:yes激活了guest，然后net user 一下发现没有密码。直接3389连过去。<br>win2012的系统，mimikataz抓不出明文，hash解不出来，没什么办法。权限卡的很严，不能创建账户，很多目录写权限都没有，版本很新没找到提权poc。发现在域下，也许可以上cain扩大战果。不过已经找到不少东西了。<br>掌控雷电指日可待，虽然没什么技术含量，东西还是不少。</p>
+<h2 id="5236"><a href="#5236" class="headerlink" title="5236"></a>5236</h2><p>第二天老王上去玩想用注册表改权限，结果把administrator的密码复制到guest下了。场面一度十分绝望。<br>后来发现他玩脱之前把创建用户的权限开放了，大马一开始net user ustb ustb /add 失败。结果发现可以直接net user ustb /add但是加不了密码。想起来以前用win2012时候密码强度有要求，改了个麻烦的成功了。<br>总之增加游戏难度也算是成功了，过一阵子有空试试来一波域渗透。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list">
+			 
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
+        </li>
+      
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/03/01/服务器卡权限的绕过/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-终于学一下ssrf" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -171,12 +312,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>说什么一周一篇都是扯淡- -，拖延症拖啊拖啊拖。ssrf这个概念好久前就知道，但一直没有实际操作过，这次拿i春秋的两道题学一下。</p>
-<h3 id="parameters"><a href="#parameters" class="headerlink" title="parameters"></a>parameters</h3><p>在do=main页面有一个输入框，随便输点什么会提示协议或后缀不对，根据套路应该是ssrf。然后发现限制了协议是http，后缀是图片。<br>因为协议被限制了，所以不能直接file://读文件，但可以通过在自己服务器上放一个用来跳转的php文件。<br>内容是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">header(&quot;Location:$_GET[&apos;a&apos;]&quot;);</div></pre></td></tr></table></figure></p>
-<p>然后访问302.php?a=file:///var/www/html/index.php读主页的源码。不过这里的问题是后缀被限制成图片。所以在自己的服务器上配置.htaccess,把jpg解析为php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">AddType application/x-httpd-php jpg</div></pre></td></tr></table></figure></p>
-<p>访问<a href="http://ctf.ever404.com/302.jpg?a=file:///var/www/html/index.php" target="_blank" rel="external">http://ctf.ever404.com/302.jpg?a=file:///var/www/html/index.php</a><br>后面的部分比较奇葩了，读取了数据库的存储文件ibdata1拿到了密码</p>
-<p>###cat<br>这道题是过滤了内网ip，同样通过跳转。<a href="http://ctf.ever404.com/1.php?1.jpg即可。" target="_blank" rel="external">http://ctf.ever404.com/1.php?1.jpg即可。</a><br>看writeup扫端口，80很快，6379超时。根据套路猜是redis未授权。<br>禁用了http和https，利用gopher写shell就行了。</p>
-
+        <p>说什么一周一篇都是扯淡- -，拖延症拖啊拖啊拖。ssrf这个概念好久前就知道，但一直没有实际操作过，这次拿i春秋的两道题学一下。<br>
+        
       
 
       
