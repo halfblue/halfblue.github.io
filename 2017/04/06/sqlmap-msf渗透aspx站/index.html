@@ -14,15 +14,15 @@
 <meta property="og:url" content="http://yoursite.com/2017/04/06/sqlmap-msf渗透aspx站/index.html">
 <meta property="og:site_name" content="Halfblue">
 <meta property="og:description" content="偶遇北科第一黑找了个叫自助管理系统的站，以为是个重要系统，先扫端口。发现8080有个sqlwebservice，并不会用。回头wvs扫主站没想到登陆框直接有个post注入。">
-<meta property="og:image" content="http://yoursite.com/sqlmap-msf渗透aspx站/meterpreter.png">
-<meta property="og:image" content="http://yoursite.com/sqlmap-msf渗透aspx站/metsvc.png">
-<meta property="og:image" content="http://yoursite.com/sqlmap-msf渗透aspx站/lazha.png">
-<meta property="og:image" content="http://yoursite.com/sqlmap-msf渗透aspx站/lazha2.png">
-<meta property="og:updated_time" content="2017-04-06T15:21:40.926Z">
+<meta property="og:image" content="http://oo0ng976c.bkt.clouddn.com/meterpreter.png">
+<meta property="og:image" content="http://oo0ng976c.bkt.clouddn.com/metsvc.png">
+<meta property="og:image" content="http://oo0ng976c.bkt.clouddn.com/lazha.png">
+<meta property="og:image" content="http://oo0ng976c.bkt.clouddn.com/lazha2.png">
+<meta property="og:updated_time" content="2017-04-07T01:55:20.671Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sqlmap+msf渗透aspx站">
 <meta name="twitter:description" content="偶遇北科第一黑找了个叫自助管理系统的站，以为是个重要系统，先扫端口。发现8080有个sqlwebservice，并不会用。回头wvs扫主站没想到登陆框直接有个post注入。">
-<meta name="twitter:image" content="http://yoursite.com/sqlmap-msf渗透aspx站/meterpreter.png">
+<meta name="twitter:image" content="http://oo0ng976c.bkt.clouddn.com/meterpreter.png">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -184,19 +184,19 @@
 <p>空欢喜，欺骗消费者。就是个管自主打印机的，前两天终端机收了个打印机，这又来一个，犯冲。</p>
 <h3 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h3><p>aspx自然是搭配mssql数据库，好东西，而且权限贼高，其实看这么薄弱的安全意识就应该想到不是啥有用的系统。直接sqlmap的os-shell，连绝对路径都不需要就返回了shell。找了找路径想传个大马，但是乱码，加–charset=gbk也没用。干脆用kali下的sqlmap，解决了乱码。<br>反正都用kali了，干脆直接上msf了，os-pwn返回一个meterpreter</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">--os-pwn --msf-path /usr/share/metasploit-framework/ --priv-esc -v 1</div></pre></td></tr></table></figure>
-<p><img src="sqlmap-msf渗透aspx站/meterpreter.png" alt="avater"></p>
+<p><img src="http://oo0ng976c.bkt.clouddn.com/meterpreter.png" alt="avater"></p>
 <p>之后ps+migrate到别的进程省得断线。之后找了下绝对路径。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">search <span class="_">-f</span> login.aspx</div></pre></td></tr></table></figure>
 <p>然后虚拟机网就断了。无聊就本机sqlmap –file-write –file-dst写了大马，网好了回kali接着搞，又开了个meterpreter，hashdump抓密码，看一下也没有360啥的，开了个metsvc后门</p>
-<p><img src="sqlmap-msf渗透aspx站/metsvc.png" alt="avater"></p>
+<p><img src="http://oo0ng976c.bkt.clouddn.com/metsvc.png" alt="avater"></p>
 <p>他们大马找了termservice端口</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tasklist /svc</div><div class="line">netstat /ano</div></pre></td></tr></table></figure>
 <p>看到是3389改到了1951，建用户开远程连上去互相吹牛逼了。</p>
 <h3 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h3><p>想的是metsvc开的31337以后直接连就可以了。</p>
 <p>然而北科第一拉闸王把站拉黑了╮(╯▽╰)╭</p>
-<p><img src="/sqlmap-msf渗透aspx站/lazha.png" alt="avatar"></p>
+<p><img src="http://oo0ng976c.bkt.clouddn.com/lazha.png" alt="avatar"></p>
 <p>GG</p>
-<h4 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h4><p><img src="/sqlmap-msf渗透aspx站/lazha2.png" alt="avatar"></p>
+<h4 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h4><p><img src="http://oo0ng976c.bkt.clouddn.com/lazha2.png" alt="avatar"></p>
 
       
 
