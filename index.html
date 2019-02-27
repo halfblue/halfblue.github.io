@@ -54,8 +54,6 @@
 			
 				<li><a href="/">主页</a></li>
 	        
-				<li><a href="/tags/随写/">随笔</a></li>
-	        
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -110,8 +108,6 @@
 			
 				
 			
-				
-			
 			
 			
 			<nav class="header-nav">
@@ -132,9 +128,7 @@
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 50%"><a href="/">主页</a></li>
-		        
-					<li style="width: 50%"><a href="/tags/随写/">随笔</a></li>
+					<li style="width: 100%"><a href="/">主页</a></li>
 		        
 				</ul>
 			</nav>
@@ -150,6 +144,76 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-线性回归练习-李宏毅机器学习hw1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/26/线性回归练习-李宏毅机器学习hw1/">线性回归练习--李宏毅机器学习hw1</a>
+    </h1>
+  
+
+        
+        <a href="/2019/02/26/线性回归练习-李宏毅机器学习hw1/" class="archive-article-date">
+  	<time datetime="2019-02-26T14:55:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>以前总说安全是不产生价值的岗位，结果现在又往一样不产生价值的数据分析里跳，谁让这玩意火呢。最近看机器学习，看的也不快，做个题熟悉一下，还是有不了解的东西，虽然只是个最简单的线性回归。<br>题目大概就是用18个指标预测第10小时pm2.5的值，介绍在<a href="https://ntumlta.github.io/2017fall-ml-hw1/" target="_blank" rel="external">https://ntumlta.github.io/2017fall-ml-hw1/</a><br>首先想的就是最简单的，只用pm2.5一个特征来预测，每天的分开算，这样就是从训练集每天取九个特征加一个答案有24-9=15种取法，一个月20天，12个月，一共12<em>20</em>15=3600行，9列<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">train_data = pd.read_csv(<span class="string">'train.csv'</span>,encoding = <span class="string">'BIG5'</span>)</div><div class="line">pm25list = train_data[train_data[<span class="string">'測項'</span>]==<span class="string">'PM2.5'</span>].iloc[:,<span class="number">3</span>:]</div><div class="line">x_tmp = []</div><div class="line">y_tmp = []</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">15</span>):</div><div class="line">    tempx = pm25list.iloc[:,i:i+<span class="number">9</span>]</div><div class="line">    tempx.columns=np.array(range(<span class="number">9</span>))</div><div class="line">    x_tmp.append(tempx)</div><div class="line">    y_tmp.append(pm25list.iloc[:,i+<span class="number">9</span>])</div><div class="line">x = pd.concat(x_tmp)</div><div class="line">y = pd.concat(y_tmp)</div><div class="line">x_data = np.array(x,float)</div><div class="line">y_data = np.array(y,float)</div></pre></td></tr></table></figure></p>
+<p>训练数据找好了，写个线性回归的函数，先用正规解算着，一会再跟梯度下降的对比。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LinearRegression1</span><span class="params">()</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.coef_ = <span class="keyword">None</span></div><div class="line">        self.interception_ = <span class="keyword">None</span></div><div class="line">        self._theta = <span class="keyword">None</span></div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit_normal</span><span class="params">(self,X_train,Y_train)</span>:</span></div><div class="line">        X_b = np.c_[np.ones((X_train.shape[<span class="number">0</span>],<span class="number">1</span>)),X_train]</div><div class="line">        self._theta = np.linalg.inv(X_b.T.dot(X_b)).dot(X_b.T).dot(Y_train)</div><div class="line">        self.coef_ = self._theta[<span class="number">1</span>:]</div><div class="line">        self.interception_ =self._theta[<span class="number">0</span>]</div><div class="line">        <span class="keyword">return</span> self</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self,X_predict)</span>:</span></div><div class="line">        <span class="keyword">assert</span> self.coef_ <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> self.interception_ <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>,\</div><div class="line">        <span class="string">"must fit before predict"</span></div><div class="line">        X_b = np.c_[np.ones((X_predict.shape[<span class="number">0</span>],<span class="number">1</span>)),X_predict]</div><div class="line">        <span class="keyword">return</span> X_b.dot(self._theta)</div><div class="line">       </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">"LinearRegression1()"</span></div></pre></td></tr></table></figure></p>
+<p>代入模型求解，系数向量有9个特征加上一个b，一共十维<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">pmlrg = LinearRegression1()</div><div class="line">pmlrg.fit_normal(x_data,y_data)</div><div class="line">pmlrg._theta</div></pre></td></tr></table></figure></p>
+<p>题目有kaggle链接，虽然不能参加但是能看到得分，用的是均方根误差，定义一个<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">RMSE</span><span class="params">(predict, answer)</span>:</span></div><div class="line"></div><div class="line">    rmse = np.sqrt(np.sum((predict - answer)**<span class="number">2</span>) /predict.shape[<span class="number">0</span>])</div><div class="line">    <span class="keyword">return</span> rmse</div></pre></td></tr></table></figure></p>
+<p>计算一下和标准答案之间的RMSE<br><code>6.661983418013117</code><br>这么高，看别人都是5点多。想怎么改进一下，最简单的想法就是<strong>加 大 力 度</strong><br>把18个指标全都用上，跨天取值。这样读数据就比较麻烦了，因为每个月只有20天的数据，所以不能跨月。这样就有12个月，每个月一共有20天*24小时。特征依然是九个小时，取连续9小时的话最后九个小时取不了，所以每月有20*24-9=471种，12个月有12*471=5652种。<br>然后是列向量，只用pm2.5一个指标的时候是9个特征，现在18个指标就是18*9=162个特征。<br>所以x是一个5652*162的矩阵，代表一共取了5652个[九小时]，这个[九小时]里每个小时的每个污染指标都作为一个特征<br>y就是5652个[第十小时]</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">rawdata = pd.read_csv(<span class="string">'train.csv'</span>,encoding = <span class="string">'BIG5'</span>).iloc[:,<span class="number">3</span>:]</div><div class="line">data = [[] <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">18</span>)]</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(rawdata.shape[<span class="number">0</span>]):</div><div class="line">    <span class="keyword">if</span> i%<span class="number">18</span> == <span class="number">10</span>:</div><div class="line">        <span class="keyword">for</span> d <span class="keyword">in</span> [float(<span class="number">0</span>) <span class="keyword">if</span> x==<span class="string">'NR'</span> <span class="keyword">else</span> x <span class="keyword">for</span> x <span class="keyword">in</span> rawdata.iloc[i] ]:</div><div class="line">            data[i%<span class="number">18</span>].append(float(d))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">for</span> d <span class="keyword">in</span> rawdata.iloc[i]:</div><div class="line">            data[i%<span class="number">18</span>].append(float(d))</div><div class="line">x = [[] <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">12</span>*<span class="number">471</span>)]</div><div class="line">y = []</div><div class="line"><span class="comment"># 每 12 個月</span></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">12</span>):</div><div class="line">    <span class="comment"># 一個月取連續10小時的data可以有471筆</span></div><div class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">471</span>):</div><div class="line">        <span class="comment"># 18種污染物</span></div><div class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">18</span>):</div><div class="line">            <span class="comment"># 連續9小時</span></div><div class="line">            <span class="keyword">for</span> s <span class="keyword">in</span> range(<span class="number">9</span>):</div><div class="line">                x[<span class="number">471</span>*i+j].append(data[t][<span class="number">480</span>*i+j+s] )</div><div class="line">        y.append(data[<span class="number">9</span>][<span class="number">480</span>*i+j+<span class="number">9</span>])</div><div class="line">x = np.array(x)</div><div class="line">y = np.array(y)</div></pre></td></tr></table></figure>
+<p>训练<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">reg = LinearRegression1()</div><div class="line">reg.fit_normal(x,y)</div></pre></td></tr></table></figure></p>
+<p>之后读取测试集，也不能简单的只读pm2.5的行了，一共240天，每天都是18*9=162，和训练的模型一个维度<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">testdata = pd.read_csv(<span class="string">'test.csv'</span>,encoding = <span class="string">'BIG5'</span>,header=<span class="keyword">None</span>).iloc[:,<span class="number">2</span>:]</div><div class="line">xte = [[] <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">12</span>*<span class="number">20</span>)]</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(testdata.shape[<span class="number">0</span>]):</div><div class="line">    <span class="keyword">if</span> i%<span class="number">18</span> == <span class="number">10</span>:</div><div class="line">        <span class="keyword">for</span> d <span class="keyword">in</span> [float(<span class="number">0</span>) <span class="keyword">if</span> x==<span class="string">'NR'</span> <span class="keyword">else</span> x <span class="keyword">for</span> x <span class="keyword">in</span> testdata.iloc[i] ]:</div><div class="line">            xte[i//<span class="number">18</span>].append(d)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">for</span> d <span class="keyword">in</span> testdata.iloc[i]:</div><div class="line">            xte[i//<span class="number">18</span>].append(d)</div><div class="line"></div><div class="line">allpredict = reg.predict(xte)</div><div class="line">rmseall = RMSE(allpredict , answer)</div><div class="line">rmseall</div></pre></td></tr></table></figure></p>
+<p><code>6.570013915501879</code><br>尼玛就进步了这么一点点，大力也没出奇迹啊。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list">
+			 
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color5">机器学习</a>
+        </li>
+      
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/02/26/线性回归练习-李宏毅机器学习hw1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
   
     <article id="post-rw养生搞站" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -679,6 +743,10 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color3">渗透</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color5">机器学习</a>
               </li>
             
             <div class="clearfix"></div>

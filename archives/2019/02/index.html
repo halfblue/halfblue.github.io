@@ -6,18 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>服务器卡权限绕过 | Halfblue</title>
+  <title>Archives: 2019/2 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="昨天桥西发了一个系统，漏洞奇多。JSP+MYSQL，登陆界面有注入，注入后发现有弱密码账号密码都是1。想有没有办法拿个shell什么的。先是试了sqlmap的os-shell，基本用不了。上传不了文件，命令差不多只能执行dir。然后想还是sqlmap，用file-write写个大马小马，但是写过去都有问题，解析不出来。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="服务器卡权限绕过">
-<meta property="og:url" content="http://yoursite.com/2017/03/01/服务器卡权限的绕过/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Halfblue">
+<meta property="og:url" content="http://yoursite.com/archives/2019/02/index.html">
 <meta property="og:site_name" content="Halfblue">
-<meta property="og:description" content="昨天桥西发了一个系统，漏洞奇多。JSP+MYSQL，登陆界面有注入，注入后发现有弱密码账号密码都是1。想有没有办法拿个shell什么的。先是试了sqlmap的os-shell，基本用不了。上传不了文件，命令差不多只能执行dir。然后想还是sqlmap，用file-write写个大马小马，但是写过去都有问题，解析不出来。">
-<meta property="og:updated_time" content="2019-02-23T10:11:54.837Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="服务器卡权限绕过">
-<meta name="twitter:description" content="昨天桥西发了一个系统，漏洞奇多。JSP+MYSQL，登陆界面有注入，注入后发现有弱密码账号密码都是1。想有没有办法拿个shell什么的。先是试了sqlmap的os-shell，基本用不了。上传不了文件，命令差不多只能执行dir。然后想还是sqlmap，用file-write写个大马小马，但是写过去都有问题，解析不出来。">
+<meta name="twitter:title" content="Halfblue">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -147,137 +143,60 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-服务器卡权限的绕过" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      服务器卡权限绕过
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2019" class="archive-year">2019</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2019/02/26/线性回归练习-李宏毅机器学习hw1/" class="archive-article-date">
+  	<time datetime="2019-02-26T14:55:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-26</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2019/02/26/线性回归练习-李宏毅机器学习hw1/">线性回归练习--李宏毅机器学习hw1</a>
     </h1>
   
 
-        
-        <a href="/2017/03/01/服务器卡权限的绕过/" class="archive-article-date">
-  	<time datetime="2017-03-01T14:47:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>昨天桥西发了一个系统，漏洞奇多。JSP+MYSQL，登陆界面有注入，注入后发现有弱密码账号密码都是1。想有没有办法拿个shell什么的。<br>先是试了sqlmap的os-shell，基本用不了。上传不了文件，命令差不多只能执行dir。然后想还是sqlmap，用file-write写个大马小马，但是写过去都有问题，解析不出来。<a id="more"></a><br>后来北科大第一黑客直接上wvs扫除200多个高危，不过都是struts开发模式。发现有struts02016远程命令执行。在login.jsp不行，需要在Login.action不是很懂。但是也很蛋疼，执行不了几个命令。大致看了下，有whoami显示是system，system你还啥也干不了…<br>net user显示有administrator和guest。net user /add失败。net user guest失败。目录页切换不了。因为传不了文件，感觉提权也没啥希望。<br>后来随便试了几下发现可以net user guest /active:yes激活了guest，然后net user 一下发现没有密码。直接3389连过去。<br>win2012的系统，mimikataz抓不出明文，hash解不出来，没什么办法。权限卡的很严，不能创建账户，很多目录写权限都没有，版本很新没找到提权poc。发现在域下，也许可以上cain扩大战果。不过已经找到不少东西了。<br>掌控雷电指日可待，虽然没什么技术含量，东西还是不少。<br>—————————————GG——————————————–<br>第二天老王上去玩想用注册表改权限，结果把administrator的密码复制到guest下了。场面一度十分绝望。<br>后来发现他玩脱之前把创建用户的权限开放了，大马一开始net user ustb ustb /add 失败。结果发现可以直接net user ustb /add但是加不了密码。想起来以前用win2012时候密码强度有要求，改了个麻烦的成功了。<br>总之增加游戏难度也算是成功了，过一阵子有空试试来一波域渗透。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list">
 			 
         <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
+        	<a href="javascript:void(0)" class="article-tag-list-link color5">机器学习</a>
         </li>
       
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/03/01/服务器卡权限的绕过/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2017/03/06/openvasa使用排坑/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          openvasa使用排坑
-        
-      </div>
-    </a>
   
   
-    <a href="/2017/02/03/终于学一下ssrf/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">终于学一下ssrf</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-  
-    <div class="duoshuo"></div>
+    </div></section>
   
 
-
+    
 
 
           </div>
@@ -300,8 +219,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
