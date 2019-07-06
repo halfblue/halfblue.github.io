@@ -6,14 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018 | Halfblue</title>
+  <title>rw养生之友情检测 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Halfblue">
-<meta property="og:url" content="http://yoursite.com/archives/2018/index.html">
+  <meta name="description" content="搞事最近一直也没找着状态，然后就无聊想看看学院网络安全咋样。扫子域名找到个教务站，看着像荒废多年的，友情检测一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rw养生之友情检测">
+<meta property="og:url" content="http://yoursite.com/2018/11/26/rw养生之友情检测/index.html">
 <meta property="og:site_name" content="Halfblue">
+<meta property="og:description" content="搞事最近一直也没找着状态，然后就无聊想看看学院网络安全咋样。扫子域名找到个教务站，看着像荒废多年的，友情检测一下。">
+<meta property="og:updated_time" content="2019-07-04T15:48:49.958Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Halfblue">
+<meta name="twitter:title" content="rw养生之友情检测">
+<meta name="twitter:description" content="搞事最近一直也没找着状态，然后就无聊想看看学院网络安全咋样。扫子域名找到个教务站，看着像荒废多年的，友情检测一下。">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -143,36 +147,36 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-rw养生之友情检测" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/11/26/rw养生之友情检测/" class="archive-article-date">
-  	<time datetime="2018-11-26T13:46:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-26</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/11/26/rw养生之友情检测/">rw养生之友情检测</a>
+    <h1 class="article-title" itemprop="name">
+      rw养生之友情检测
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/11/26/rw养生之友情检测/" class="archive-article-date">
+  	<time datetime="2018-11-26T13:46:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="搞事"><a href="#搞事" class="headerlink" title="搞事"></a>搞事</h3><p>最近一直也没找着状态，然后就无聊想看看学院网络安全咋样。扫子域名找到个教务站，看着像荒废多年的，友情检测一下。<a id="more"></a><br>直接wvs扫了下，注册页有个时间盲注，跑的贼慢，所有表名一节课都跑不出来。还有个信息泄露，web.xml能看许多servlet的位置，暴露了一些目录，但是还是不能直接访问，也找不到这些类的路径，直接访问classes目录也不行。还有目录遍历，但是也找不到password、shadow之类的，不知道为什么。(因为我蠢，后来发现路径写错了)<br>未登录用户也看不了几个页面，有几个新闻，都是好几年前的了。但是直觉告诉我这破站肯定还有问题，看了看新闻里有个下载的功能，加上目录遍历，任意文件下载就是你了。<br>接下来就是找网站路径，配合着wvs扫的目录试了半天，成功把download.jsp下下来了。<br><br>这样的话jsp就都能下载了，但是主要功能都在servlet里，找不到servlet的目录还是没用。<br>找了个java项目对照着找目录，突然想起来看看.classpath试试。<br><br>好的就是这个src。找到路径了，下载一堆文件，接着找数据库。05年的程序，写的真绕啊，可能也是为了安全吧。从login跳到useridentitiy，然后最坑的是没写导入的类名称，xml里也没有，后来连蒙带猜终于找到了配置文件，oracle数据库ip和账号密码。<br><br>nmap扫下ip，有防火墙。。。连不了了应该。只能等有个内网机器再连吧，而且这个192.168也不知道和教室的是不是同一个。<br>还是需要找管理员账号 ，爬数据或者上传shell啥的，但是看源码好像也没上传的功能，所以也没啥思路了，先这样吧。</p>
+<h3 id="我又回来了"><a href="#我又回来了" class="headerlink" title="我又回来了"></a>我又回来了</h3><p>查了查任意下载发现了个牛逼的东西，slocate.db(不同版本名字不一样)，里面有系统里所有文件的路径。这样配合任意下载就可以写个爬虫把网站直接down下来，然后再慢慢找。<br>不过这个破东西是真的难打开，必须要跟它那个版本的系统才可以，费劲巴力找到个十多年前的centos4.4，导出数据到txt。然后还拷不出来，最后本地写了个上传页面从虚拟机传过来。<br>把网站全爬下来之后翻源码，搜了一堆关键字，最后终于找到一个hibernate的配置文件，里面有另一个数据库地址，不明白是啥操作，为啥有俩数据库地址，而且好像还都能用。<br><br>navicat-&gt;连接<br>虚浮了。<br>网站服务器就算了吧，懒得折腾了。话说有数据库再拿服务器这操作还真有点别扭。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list">
@@ -184,19 +188,97 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2018/11/26/rw养生之友情检测/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2019/02/26/线性回归练习-李宏毅机器学习hw1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          线性回归练习--李宏毅机器学习hw1
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2017/05/21/windows持续控制/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">windows持续控制</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+    <div class="duoshuo"></div>
   
 
-    
+
 
 
           </div>
@@ -219,8 +301,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
