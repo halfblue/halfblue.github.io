@@ -6,18 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>服务器卡权限绕过 | Halfblue</title>
+  <title>最好的语言之javascript原型链污染 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="昨天桥西发了一个系统，漏洞奇多。JSP+MYSQL，登陆界面有注入，注入后发现有弱密码账号密码都是1。想有没有办法拿个shell什么的。先是试了sqlmap的os-shell，基本用不了。上传不了文件，命令差不多只能执行dir。然后想还是sqlmap，用file-write写个大马小马，但是写过去都有问题，解析不出来。">
+  <meta name="description" content="趁着放假继续学点一直没学的，js相关的一些安全问题也是越来越常见了，先看下最出名的原型链污染。感想就是js也是最好的语言有力竞争者，面向对象的用法离谱。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="服务器卡权限绕过">
-<meta property="og:url" content="http://yoursite.com/2017/03/01/服务器卡权限的绕过/index.html">
+<meta property="og:title" content="最好的语言之javascript原型链污染">
+<meta property="og:url" content="http://yoursite.com/2020/03/16/最好的语言之javascript原型链污染/index.html">
 <meta property="og:site_name" content="Halfblue">
-<meta property="og:description" content="昨天桥西发了一个系统，漏洞奇多。JSP+MYSQL，登陆界面有注入，注入后发现有弱密码账号密码都是1。想有没有办法拿个shell什么的。先是试了sqlmap的os-shell，基本用不了。上传不了文件，命令差不多只能执行dir。然后想还是sqlmap，用file-write写个大马小马，但是写过去都有问题，解析不出来。">
-<meta property="og:updated_time" content="2019-02-23T10:11:54.838Z">
+<meta property="og:description" content="趁着放假继续学点一直没学的，js相关的一些安全问题也是越来越常见了，先看下最出名的原型链污染。感想就是js也是最好的语言有力竞争者，面向对象的用法离谱。">
+<meta property="og:updated_time" content="2020-05-22T07:26:59.082Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="服务器卡权限绕过">
-<meta name="twitter:description" content="昨天桥西发了一个系统，漏洞奇多。JSP+MYSQL，登陆界面有注入，注入后发现有弱密码账号密码都是1。想有没有办法拿个shell什么的。先是试了sqlmap的os-shell，基本用不了。上传不了文件，命令差不多只能执行dir。然后想还是sqlmap，用file-write写个大马小马，但是写过去都有问题，解析不出来。">
+<meta name="twitter:title" content="最好的语言之javascript原型链污染">
+<meta name="twitter:description" content="趁着放假继续学点一直没学的，js相关的一些安全问题也是越来越常见了，先看下最出名的原型链污染。感想就是js也是最好的语言有力竞争者，面向对象的用法离谱。">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -147,27 +147,38 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-服务器卡权限的绕过" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-最好的语言之javascript原型链污染" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      服务器卡权限绕过
+      最好的语言之javascript原型链污染
     </h1>
   
 
         
-        <a href="/2017/03/01/服务器卡权限的绕过/" class="archive-article-date">
-  	<time datetime="2017-03-01T14:47:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-01</time>
+        <a href="/2020/03/16/最好的语言之javascript原型链污染/" class="archive-article-date">
+  	<time datetime="2020-03-16T14:46:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-16</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>昨天桥西发了一个系统，漏洞奇多。JSP+MYSQL，登陆界面有注入，注入后发现有弱密码账号密码都是1。想有没有办法拿个shell什么的。<br>先是试了sqlmap的os-shell，基本用不了。上传不了文件，命令差不多只能执行dir。然后想还是sqlmap，用file-write写个大马小马，但是写过去都有问题，解析不出来。<a id="more"></a><br>后来北科大第一黑客直接上wvs扫除200多个高危，不过都是struts开发模式。发现有struts02016远程命令执行。在login.jsp不行，需要在Login.action不是很懂。但是也很蛋疼，执行不了几个命令。大致看了下，有whoami显示是system，system你还啥也干不了…<br>net user显示有administrator和guest。net user /add失败。net user guest失败。目录页切换不了。因为传不了文件，感觉提权也没啥希望。<br>后来随便试了几下发现可以net user guest /active:yes激活了guest，然后net user 一下发现没有密码。直接3389连过去。<br>win2012的系统，mimikataz抓不出明文，hash解不出来，没什么办法。权限卡的很严，不能创建账户，很多目录写权限都没有，版本很新没找到提权poc。发现在域下，也许可以上cain扩大战果。不过已经找到不少东西了。<br>掌控雷电指日可待，虽然没什么技术含量，东西还是不少。<br>—————————————GG——————————————–<br>第二天老王上去玩想用注册表改权限，结果把administrator的密码复制到guest下了。场面一度十分绝望。<br>后来发现他玩脱之前把创建用户的权限开放了，大马一开始net user ustb ustb /add 失败。结果发现可以直接net user ustb /add但是加不了密码。想起来以前用win2012时候密码强度有要求，改了个麻烦的成功了。<br>总之增加游戏难度也算是成功了，过一阵子有空试试来一波域渗透。</p>
+        <p>趁着放假继续学点一直没学的，js相关的一些安全问题也是越来越常见了，先看下最出名的原型链污染。感想就是js也是最好的语言有力竞争者，面向对象的用法离谱。<a id="more"></a><br>所谓原型链其实就是js面向对象编程中的一个特性，所以先介绍下js的面向对象。虽然ES6之后也有class、extends之类看上去很正常的写法了，但那些也都是语法糖，还是要了解下一言难尽的ES5写法。<br>首先，类的定义关键字是function(惊不惊喜意不意外)，写法就是正常类的写法，但叫做构造函数<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params">name,age</span>)</span>&#123;</div><div class="line">		<span class="keyword">this</span>.name = name;</div><div class="line">		<span class="keyword">this</span>.age = age;</div><div class="line">		<span class="keyword">this</span>.say = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"hi"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">var</span> a = <span class="keyword">new</span> A(<span class="string">'a'</span>,<span class="number">18</span>)</div><div class="line">a.say() <span class="comment">//hi</span></div></pre></td></tr></table></figure></p>
+<p>不过这样就导致了个问题，当创建多个实例的时候，实际上会开辟多个内存空间，而这个函数其实是相同的，这样就会浪费内存空间。所以每个对象(函数/类)都有一个prototype属性，指向该构造函数的原型对象。这个原型对象的所有属性和方法，都会被构造函数的实例继承。所以可以这么写：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">A.prototype.kind = <span class="string">"human"</span></div><div class="line">A.prototype.goodbye = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'goodbye'</span>);</div><div class="line">	&#125;</div><div class="line">a.kind <span class="comment">//human</span></div><div class="line">a.goodbye() <span class="comment">//goodbye</span></div></pre></td></tr></table></figure></p>
+<p>那么这里a变量作为一个实例，成功调用了A类中的goodbye方法，说明它们之间是有一定联系的。这个联系就是每个实例都有一个__proto__属性(可以自己console.log看)，内容是类的原型，也就是说实例的__proto__和类的prototype相当于两个指向同一个地址的指针，默认情况a.__proto__ === A.prototype。所以实例可以访问类里面的属性和方法。查找顺序是先查看对象自己的方法，没有再找构造函数的prototype中的方法。<br>每个对象都有__proto__属性指向它的原型，构造函数A的原型对象的__proto__指向Object函数的原型，也就是A.prototype.__proto__ === Object.prototype，感觉和python中的object差不多，所有类的基类。<br>这就是JavaScript中的原型链，a -&gt; A.prototype -&gt; Object.prototype -&gt; null<br>这条链是靠__proto__/prototype属性来连接的，所以修改实例的__proto__中的属性就可能修改原型对象的属性，比如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">a.__proto__.foo = <span class="string">"test"</span> <span class="comment">//和A.prototype.foo = "test"等价</span></div><div class="line">a.foo <span class="comment">//test</span></div><div class="line">如果修改了原型的话，新的实例的原型会改变。</div><div class="line">A.prototype = &#123;<span class="attr">ccc</span>:<span class="number">123</span>&#125; <span class="comment">//赋值只能为对象类型，本质上也相当于改变一个指针的指向，并没有真正修改A的原型</span></div><div class="line"><span class="keyword">var</span> a2 = <span class="keyword">new</span> A(<span class="string">'a2'</span>,<span class="number">10</span>)</div><div class="line">a2.ccc <span class="comment">//123</span></div><div class="line">a.ccc <span class="comment">//undefined</span></div><div class="line">a2.__proto__ === a.__proto__ <span class="comment">//false</span></div></pre></td></tr></table></figure></p>
+<p>网上的例子一般是用一个简单对象做例子，但这样的话它的构造函数就是Object，Object的原型(好像)是只能添加值不能修改的，所以可能会把人弄懵<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> o1 = &#123;&#125; <span class="comment">//等价于 var o1 = new Object()</span></div><div class="line"><span class="built_in">Object</span>.prototype.foo = <span class="string">"test"</span></div><div class="line"><span class="keyword">var</span> o2 = &#123;&#125;</div><div class="line">o2.foo <span class="comment">//test</span></div><div class="line"><span class="built_in">Object</span>.prototype = &#123;<span class="attr">aaa</span>:<span class="number">123</span>&#125; <span class="comment">//不会生效</span></div><div class="line">o2.aaa <span class="comment">//undefined</span></div></pre></td></tr></table></figure></p>
+<p>所以这个漏洞可能出现的场景就是在可以修改实例对象属性的时候修改实例的__proto__属性。比如merge、clone、copy等操作。先来一个简单点的版本：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> pro = <span class="string">'__proto__'</span> <span class="comment">//利用字符串</span></div><div class="line">a[pro].lalala = <span class="string">'lalala'</span></div><div class="line">b = <span class="keyword">new</span> A(<span class="string">'b'</span>,<span class="number">10</span>)<span class="comment">//新建一个同类对象</span></div><div class="line">b.lalala <span class="comment">//lalala 说明污染了类原型</span></div><div class="line"><span class="keyword">var</span> keys = [<span class="string">'a'</span>,<span class="string">'__proto__'</span>]<span class="comment">//利用数组</span></div><div class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i <span class="keyword">in</span> keys)&#123;</div><div class="line">	<span class="keyword">if</span>(keys[i] === <span class="string">'__proto__'</span>)&#123;<span class="comment">//防止添加多余的属性，看着麻烦</span></div><div class="line">		a[keys[i]] = &#123;<span class="attr">hahaha</span>:<span class="string">'hahaha'</span>&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">b.hahaha <span class="comment">//hahaha</span></div></pre></td></tr></table></figure></p>
+<p>因为本质是只需要一个叫做”__proto__“的字符串，所以字符串和数组都很正常，但是当使用对象类型的时候就会出现问题<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> o1 = &#123;<span class="attr">a</span>: <span class="number">1</span>, <span class="string">"__proto__"</span>: &#123;<span class="attr">b</span>: <span class="number">2</span>&#125;&#125;</div><div class="line"><span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">in</span> o1)&#123;</div><div class="line">	<span class="built_in">console</span>.log(key) <span class="comment">//a、b</span></div><div class="line">&#125;</div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.keys(o1)) <span class="comment">// Array [ "a" ]</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> o2 = &#123;<span class="attr">a</span>:<span class="number">1</span>,<span class="attr">b</span>:<span class="number">2</span>&#125;</div><div class="line"><span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">in</span> o2)&#123;</div><div class="line">	<span class="built_in">console</span>.log(key) <span class="comment">//a、b</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>也就是说”__proto__“这个键在实例化的时候就自动解析了(参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Object_initializer)，把o1的\_\_proto\_\_属性指向了{b" target="_blank" rel="external">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Object_initializer)，把o1的\_\_proto\_\_属性指向了{b</a>: 2}这个对象。这里其实o1只有a一个属性，只是用for语句遍历的时候会把原型链上的b也打印出来，用Object.keys()可以忽略原型链中的属性。<br>所以为了使对象具有真正的__proto__属性，不能直接用字面量创建对象，一般选择用JSON.parse(‘{“a”: 1, “__proto__“: {“b”: 2}}’)创建对象。还可以用var obj3 = { a : 1 , [“__prot” + “o__“]: {k : 123} };这种。不过还是json解析对象的更常见。<br>要验证这个漏洞，最简单的验证方法就是尝试修改Object类的原型，直白的想法就这么写<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> o3 = &#123;&#125; <span class="comment">// o.__proto__ === Object.prototype</span></div><div class="line"><span class="keyword">var</span> obj3 = &#123; <span class="attr">a</span> : <span class="number">1</span> , [<span class="string">"__prot"</span> + <span class="string">"o__"</span>]: &#123;<span class="attr">k</span> : <span class="number">123</span>&#125; &#125;</div><div class="line"><span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">in</span> obj3)&#123;</div><div class="line">	<span class="keyword">if</span>(key === <span class="string">'__proto__'</span>)&#123;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">let</span> key2 <span class="keyword">in</span> obj3[key])&#123;</div><div class="line">			o3[key][key2] = obj3[key][key2]</div><div class="line">		&#125;</div><div class="line">&#125;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">		o3[key] = obj3[key]</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">o3.k <span class="comment">//123</span></div><div class="line">on = &#123;&#125;</div><div class="line">on.k <span class="comment">//123</span></div></pre></td></tr></table></figure></p>
+<p>注意不能直接写o3[key] = obj3[key]这种，因为这样的话就相当于o3[‘__proto__‘] = {k:123}，这只是修改了o3这个对象的__proto__属性不再指向Object.prototype了，而不是修改了Object.prototype。必须要再深入一层来给Object.prototype添加属性才能实现原型污染。<br>当然上边的只是便于理解的验证写法，实际上有个很接近的函数就是merge，它会递归复制属性，正好实现了上边的两层for循环：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">merge</span>(<span class="params">target, source</span>) </span>&#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> source) &#123;</div><div class="line">        <span class="keyword">if</span> (key <span class="keyword">in</span> source &amp;&amp; key <span class="keyword">in</span> target) &#123;</div><div class="line">            merge(target[key], source[key])</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            target[key] = source[key]</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">let</span> o1 = &#123;&#125;</div><div class="line"><span class="keyword">let</span> o2 = <span class="built_in">JSON</span>.parse(<span class="string">'&#123;"a": 1, "__proto__": &#123;"b": 2&#125;&#125;'</span>)</div><div class="line">merge(o1, o2)</div><div class="line"><span class="built_in">console</span>.log(o1.a, o1.b)</div><div class="line">o3 = &#123;&#125;</div><div class="line"><span class="built_in">console</span>.log(o3.b) <span class="comment">//2</span></div></pre></td></tr></table></figure></p>
+<p>这也就是实际中lodash的漏洞出现的位置。<br>另外原型对象中还有一个constructor属性可以利用，它的值就是构造函数本身，也就是A.prototype.constructor === A。<br>所以有<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">o = &#123;&#125;</div><div class="line"><span class="built_in">Object</span>.prototype.constructor === <span class="built_in">Object</span> <span class="comment">//true</span></div><div class="line">o.__proto__.constructor === <span class="built_in">Object</span> <span class="comment">//true</span></div><div class="line">o.__proto__.constructor.prototype === <span class="built_in">Object</span>.prototype <span class="comment">//true</span></div><div class="line">o.constructor.prototype === <span class="built_in">Object</span>.prototype <span class="comment">//true</span></div></pre></td></tr></table></figure></p>
+<p>注意到最后一种写法没有利用__proto__字段就获取到了Object的原型，可以绕过一些过滤。实际上o是没有constructor这个属性的，本质上还是利用了o.__proto__.constructor。所以在递归遍历属性的时候可以用{“constructor”: {“prototype”: {“a0”: true}}}这种payload<br>至于攻击例子看参考链接里的吧，都挺详细的。</p>
+<p>如何预防<br>冻结原型-使用Object.freeze (Object.prototype)。<br>对JSON输入进行模式验证。<br>避免使用不安全的递归合并功能。<br>使用没有原型的对象例如Object.create(null)。<br>使用Map而不是Object。</p>
+<p>参考链接<br><a href="https://www.leavesongs.com/PENETRATION/javascript-prototype-pollution-attack.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/javascript-prototype-pollution-attack.html</a><br><a href="https://www.mi1k7ea.com/2019/10/20/%E6%B5%85%E6%9E%90JavaScript%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93%E6%94%BB%E5%87%BB/" target="_blank" rel="external">https://www.mi1k7ea.com/2019/10/20/%E6%B5%85%E6%9E%90JavaScript%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93%E6%94%BB%E5%87%BB/</a><br><a href="https://nikoeurus.github.io/2019/11/30/JavaScript%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93" target="_blank" rel="external">https://nikoeurus.github.io/2019/11/30/JavaScript%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93</a><br><a href="https://hu3sky.github.io/2019/05/07/proto2/" target="_blank" rel="external">https://hu3sky.github.io/2019/05/07/proto2/</a></p>
 
       
 
@@ -181,7 +192,7 @@
 		<ul class="article-tag-list">
 			 
         <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
+        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
         </li>
       
 		</ul>
@@ -237,7 +248,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/03/01/服务器卡权限的绕过/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2020/03/16/最好的语言之javascript原型链污染/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -251,18 +262,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/03/06/openvasa使用排坑/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/03/21/java反序列化连续剧一/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          openvasa使用排坑
+          java反序列化连续剧一
         
       </div>
     </a>
   
   
-    <a href="/2017/02/03/终于学一下ssrf/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">终于学一下ssrf</div>
+    <a href="/2020/03/09/python安全之pickle反序列化/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">python安全之pickle反序列化</div>
       <i class="icon-circle-right"></i>
     </a>
   
