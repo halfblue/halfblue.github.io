@@ -6,14 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2019/11 | Halfblue</title>
+  <title>逻辑漏洞部分实例总结 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Halfblue">
-<meta property="og:url" content="http://yoursite.com/archives/2019/11/index.html">
+  <meta name="description" content="平时接触的一大半都是逻辑漏洞，很多时候其实也不算漏洞，只是功能设计有缺陷，更多的是需要改变思路，想出利用场景，改个数据包轻松高危。
+越权类修改id越权1、在关注、点赞、评分等功能如果出现userid，可以通过遍历userid刷量。2、修改uid越权查看个人信息、订单记录、聊天记录等等。3、如果没有id字段，可以尝试添加一个user_id之类的字段，这个字段可能是其他接口有，这个接口前端没写，但实际">
+<meta property="og:type" content="article">
+<meta property="og:title" content="逻辑漏洞部分实例总结">
+<meta property="og:url" content="http://yoursite.com/2020/07/15/逻辑漏洞部分实例总结/index.html">
 <meta property="og:site_name" content="Halfblue">
+<meta property="og:description" content="平时接触的一大半都是逻辑漏洞，很多时候其实也不算漏洞，只是功能设计有缺陷，更多的是需要改变思路，想出利用场景，改个数据包轻松高危。
+越权类修改id越权1、在关注、点赞、评分等功能如果出现userid，可以通过遍历userid刷量。2、修改uid越权查看个人信息、订单记录、聊天记录等等。3、如果没有id字段，可以尝试添加一个user_id之类的字段，这个字段可能是其他接口有，这个接口前端没写，但实际">
+<meta property="og:updated_time" content="2020-08-12T15:36:19.010Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Halfblue">
+<meta name="twitter:title" content="逻辑漏洞部分实例总结">
+<meta name="twitter:description" content="平时接触的一大半都是逻辑漏洞，很多时候其实也不算漏洞，只是功能设计有缺陷，更多的是需要改变思路，想出利用场景，改个数据包轻松高危。
+越权类修改id越权1、在关注、点赞、评分等功能如果出现userid，可以通过遍历userid刷量。2、修改uid越权查看个人信息、订单记录、聊天记录等等。3、如果没有id字段，可以尝试添加一个user_id之类的字段，这个字段可能是其他接口有，这个接口前端没写，但实际">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -143,98 +150,150 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-逻辑漏洞部分实例总结" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/19/php花式绕过技巧/" class="archive-article-date">
-  	<time datetime="2019-11-19T14:29:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-19</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/19/php花式绕过技巧/">php花式绕过技巧</a>
+    <h1 class="article-title" itemprop="name">
+      逻辑漏洞部分实例总结
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2020/07/15/逻辑漏洞部分实例总结/" class="archive-article-date">
+  	<time datetime="2020-07-15T08:44:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>平时接触的一大半都是逻辑漏洞，很多时候其实也不算漏洞，只是功能设计有缺陷，更多的是需要改变思路，想出利用场景，改个数据包轻松高危。</p>
+<h3 id="越权类"><a href="#越权类" class="headerlink" title="越权类"></a>越权类</h3><p>修改id越权<br>1、在关注、点赞、评分等功能如果出现userid，可以通过遍历userid刷量。<br>2、修改uid越权查看个人信息、订单记录、聊天记录等等。<br>3、如果没有id字段，可以尝试添加一个user_id之类的字段，这个字段可能是其他接口有，这个接口前端没写，但实际也是可以用的。<br>4、也可以尝试修改内容id新建或删除评论、视频等。</p>
+<h3 id="权限绕过"><a href="#权限绕过" class="headerlink" title="权限绕过"></a>权限绕过</h3><p>密码重置<br>1、验证码暴力破解<br>一般是在手机号后加特殊字符绕过次数限制，比如前面加0，后面加空格或者其他字符，可以fuzz<br>参考<a href="https://wooyun.x10sec.org/static/bugs/wooyun-2012-011720.html" target="_blank" rel="external">https://wooyun.x10sec.org/static/bugs/wooyun-2012-011720.html</a><br>2、重置token可猜测<br>有案例用的是时间戳<br>还有可能重置链接的key是手机号+验证码的md5<br>3、越权<br>可能会有accountid/userid之类的参数，尝试修改。有些没有校验签名，校验签名的话逻辑也在js里，可以自己调一下。一般就是参数加个字符串哈希一下。<br>可能前面校验手机号验证码返回token了，后一步的userid参数却没校验，可以修改最后一步的参数重置密码。<br>参考<a href="https://wooyun.x10sec.org/static/bugs/wooyun-2013-018263.html" target="_blank" rel="external">https://wooyun.x10sec.org/static/bugs/wooyun-2013-018263.html</a><br>4、修改返回值<br>前端验证，修改返回包里的邮箱/手机号/id进入下一步。抓包时请求和返回包都要看，也可能在cookie里。<br>5、改参数键<br>可以尝试加或者删参数，比如把验证问题删掉，或者加个userid参数尝试修改其他id，也可以多写一个id参数，类似参数污染。<br>6、session覆盖<br>感觉挺少见的，参考<a href="https://wooyun.x10sec.org/static/bugs/wooyun-2014-085843.html" target="_blank" rel="external">https://wooyun.x10sec.org/static/bugs/wooyun-2014-085843.html</a></p>
+<p>微博oauth<br>1、正常登录后修改返回包中的uid<br>2、获取access_token后登录其他app，同时修改access_token和uid</p>
+<p>付费绕过</p>
+<p>好友验证绕过</p>
+<h3 id="支付相关"><a href="#支付相关" class="headerlink" title="支付相关"></a>支付相关</h3><p>充值<br>1、观察是否有productid之类的参数，尝试修改为价格更低的产品。<br>2、观察是否有amount之类的参数，修改为小数字或负数。<br>3、创建低价订单，替换订单id<br>4、充非常大的数或者买非常多数量的产品(1073741824/2147483647)，可能整数溢出(高危)，也可能截到一个相对小一些的数(低危或忽略)。</p>
+<p>签约<br>首月优惠、会员升级、优惠券等。<br>1、二维码如果可以同时用微信或支付宝扫，就各扫一次再分别支付，可能开通两个月。<br>2、用没钱的卡支付，创建多个优惠订单再支付获取多次优惠。<br>3、用两个手机，都停在支付页面，先开通一个后取消自动付费再用另一个开通。</p>
+<p>优惠券<br>1、并发领多张<br>2、修改id领以前的优惠券</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>并发<br>1、并发领奖励<br>2、并发提现<br>3、并发支付<br>4、并发送礼物<br>5、并发刷赞</p>
+<p>短信轰炸(横向、纵向)<br>删cookie、加空格、加0</p>
+<p>改图片长宽导致dos</p>
+<p>细心看每个数据包就行了，挺有意思的，也没啥意思。</p>
+<p>参考链接<br><a href="http://www.kb-iot.com/post/1249.html" target="_blank" rel="external">http://www.kb-iot.com/post/1249.html</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list">
 			 
         <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
+        	<a href="javascript:void(0)" class="article-tag-list-link color3">挖洞</a>
         </li>
       
 		</ul>
 	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/05/python沙盒绕过&ssti一网打尽/" class="archive-article-date">
-  	<time datetime="2019-11-05T15:02:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/05/python沙盒绕过&ssti一网打尽/">python沙盒绕过&amp;ssti一网打尽</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
-        </li>
       
-		</ul>
-	</div>
 
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2020/07/15/逻辑漏洞部分实例总结/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2020/07/21/彻底理解windows认证/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          彻底理解windows认证
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2020/07/02/安卓安全新手村攻略/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">安卓安全新手村攻略</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+    <div class="duoshuo"></div>
   
 
-    
+
 
 
           </div>
@@ -257,8 +316,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

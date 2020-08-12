@@ -145,6 +145,205 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-彻底理解windows认证" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/21/彻底理解windows认证/">彻底理解windows认证</a>
+    </h1>
+  
+
+        
+        <a href="/2020/07/21/彻底理解windows认证/" class="archive-article-date">
+  	<time datetime="2020-07-21T15:44:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这是篇windows域相关的知识的学习笔记，来自倾旋大佬。标题也是我从他那偷的。
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list">
+			 
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
+        </li>
+      
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/07/21/彻底理解windows认证/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-逻辑漏洞部分实例总结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/15/逻辑漏洞部分实例总结/">逻辑漏洞部分实例总结</a>
+    </h1>
+  
+
+        
+        <a href="/2020/07/15/逻辑漏洞部分实例总结/" class="archive-article-date">
+  	<time datetime="2020-07-15T08:44:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>平时接触的一大半都是逻辑漏洞，很多时候其实也不算漏洞，只是功能设计有缺陷，更多的是需要改变思路，想出利用场景，改个数据包轻松高危。</p>
+<h3 id="越权类"><a href="#越权类" class="headerlink" title="越权类"></a>越权类</h3><p>修改id越权<br>1、在关注、点赞、评分等功能如果出现userid，可以通过遍历userid刷量。<br>2、修改uid越权查看个人信息、订单记录、聊天记录等等。<br>3、如果没有id字段，可以尝试添加一个user_id之类的字段，这个字段可能是其他接口有，这个接口前端没写，但实际也是可以用的。<br>4、也可以尝试修改内容id新建或删除评论、视频等。</p>
+<h3 id="权限绕过"><a href="#权限绕过" class="headerlink" title="权限绕过"></a>权限绕过</h3><p>密码重置<br>1、验证码暴力破解<br>一般是在手机号后加特殊字符绕过次数限制，比如前面加0，后面加空格或者其他字符，可以fuzz<br>参考<a href="https://wooyun.x10sec.org/static/bugs/wooyun-2012-011720.html" target="_blank" rel="external">https://wooyun.x10sec.org/static/bugs/wooyun-2012-011720.html</a><br>2、重置token可猜测<br>有案例用的是时间戳<br>还有可能重置链接的key是手机号+验证码的md5<br>3、越权<br>可能会有accountid/userid之类的参数，尝试修改。有些没有校验签名，校验签名的话逻辑也在js里，可以自己调一下。一般就是参数加个字符串哈希一下。<br>可能前面校验手机号验证码返回token了，后一步的userid参数却没校验，可以修改最后一步的参数重置密码。<br>参考<a href="https://wooyun.x10sec.org/static/bugs/wooyun-2013-018263.html" target="_blank" rel="external">https://wooyun.x10sec.org/static/bugs/wooyun-2013-018263.html</a><br>4、修改返回值<br>前端验证，修改返回包里的邮箱/手机号/id进入下一步。抓包时请求和返回包都要看，也可能在cookie里。<br>5、改参数键<br>可以尝试加或者删参数，比如把验证问题删掉，或者加个userid参数尝试修改其他id，也可以多写一个id参数，类似参数污染。<br>6、session覆盖<br>感觉挺少见的，参考<a href="https://wooyun.x10sec.org/static/bugs/wooyun-2014-085843.html" target="_blank" rel="external">https://wooyun.x10sec.org/static/bugs/wooyun-2014-085843.html</a></p>
+<p>微博oauth<br>1、正常登录后修改返回包中的uid<br>2、获取access_token后登录其他app，同时修改access_token和uid</p>
+<p>付费绕过</p>
+<p>好友验证绕过</p>
+<h3 id="支付相关"><a href="#支付相关" class="headerlink" title="支付相关"></a>支付相关</h3><p>充值<br>1、观察是否有productid之类的参数，尝试修改为价格更低的产品。<br>2、观察是否有amount之类的参数，修改为小数字或负数。<br>3、创建低价订单，替换订单id<br>4、充非常大的数或者买非常多数量的产品(1073741824/2147483647)，可能整数溢出(高危)，也可能截到一个相对小一些的数(低危或忽略)。</p>
+<p>签约<br>首月优惠、会员升级、优惠券等。<br>1、二维码如果可以同时用微信或支付宝扫，就各扫一次再分别支付，可能开通两个月。<br>2、用没钱的卡支付，创建多个优惠订单再支付获取多次优惠。<br>3、用两个手机，都停在支付页面，先开通一个后取消自动付费再用另一个开通。</p>
+<p>优惠券<br>1、并发领多张<br>2、修改id领以前的优惠券</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>并发<br>1、并发领奖励<br>2、并发提现<br>3、并发支付<br>4、并发送礼物<br>5、并发刷赞</p>
+<p>短信轰炸(横向、纵向)<br>删cookie、加空格、加0</p>
+<p>改图片长宽导致dos</p>
+<p>细心看每个数据包就行了，挺有意思的，也没啥意思。</p>
+<p>参考链接<br><a href="http://www.kb-iot.com/post/1249.html" target="_blank" rel="external">http://www.kb-iot.com/post/1249.html</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list">
+			 
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color3">挖洞</a>
+        </li>
+      
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/07/15/逻辑漏洞部分实例总结/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-安卓安全新手村攻略" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/02/安卓安全新手村攻略/">安卓安全新手村攻略</a>
+    </h1>
+  
+
+        
+        <a href="/2020/07/02/安卓安全新手村攻略/" class="archive-article-date">
+  	<time datetime="2020-07-02T13:26:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近要测一些app，除了直接测web端也有覆盖移动端常见的漏洞，学学常见的安卓漏洞和drozer的用法。
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list">
+			 
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color3">挖洞</a>
+        </li>
+      
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/07/02/安卓安全新手村攻略/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-springboot下rce的多种姿势" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -546,192 +745,6 @@
 
 
   
-    <article id="post-java反序列化连续剧二" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/23/java反序列化连续剧二/">java反序列化连续剧二</a>
-    </h1>
-  
-
-        
-        <a href="/2020/03/23/java反序列化连续剧二/" class="archive-article-date">
-  	<time datetime="2020-03-23T07:57:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>上一篇写了readObject的简单利用，这篇写一下RMI/JNDI这些java特有的特性以及JNDI注入。有一些java反序列化漏洞主要就是利用JNDI注入，反序列化只是个触发点。
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color2">java安全</a>
-        </li>
-      
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/03/23/java反序列化连续剧二/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-java反序列化连续剧一" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/21/java反序列化连续剧一/">java反序列化连续剧一</a>
-    </h1>
-  
-
-        
-        <a href="/2020/03/21/java反序列化连续剧一/" class="archive-article-date">
-  	<time datetime="2020-03-21T15:26:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近看了些java反序列化的文章，感觉都不是太有逻辑，写个文章边记录边整理。估计内容太多，可能要写几篇。这篇先写单纯的反序列化，不涉及rmi/jndi等内容。
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color2">java安全</a>
-        </li>
-      
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/03/21/java反序列化连续剧一/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-最好的语言之javascript原型链污染" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/16/最好的语言之javascript原型链污染/">最好的语言之javascript原型链污染</a>
-    </h1>
-  
-
-        
-        <a href="/2020/03/16/最好的语言之javascript原型链污染/" class="archive-article-date">
-  	<time datetime="2020-03-16T14:46:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>趁着放假继续学点一直没学的，js相关的一些安全问题也是越来越常见了，先看下最出名的原型链污染。感想就是js也是最好的语言有力竞争者，面向对象的用法离谱。
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
-        </li>
-      
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/03/16/最好的语言之javascript原型链污染/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -853,6 +866,10 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color5">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color3">挖洞</a>
               </li>
             
             <div class="clearfix"></div>

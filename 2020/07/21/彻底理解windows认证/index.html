@@ -6,14 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2019/11 | Halfblue</title>
+  <title>彻底理解windows认证 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Halfblue">
-<meta property="og:url" content="http://yoursite.com/archives/2019/11/index.html">
+  <meta name="description" content="这是篇windows域相关的知识的学习笔记，来自倾旋大佬。标题也是我从他那偷的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="彻底理解windows认证">
+<meta property="og:url" content="http://yoursite.com/2020/07/21/彻底理解windows认证/index.html">
 <meta property="og:site_name" content="Halfblue">
+<meta property="og:description" content="这是篇windows域相关的知识的学习笔记，来自倾旋大佬。标题也是我从他那偷的。">
+<meta property="og:image" content="http://yoursite.com/2020/07/21/彻底理解windows认证/kdc.png">
+<meta property="og:updated_time" content="2020-08-12T15:38:59.453Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Halfblue">
+<meta name="twitter:title" content="彻底理解windows认证">
+<meta name="twitter:description" content="这是篇windows域相关的知识的学习笔记，来自倾旋大佬。标题也是我从他那偷的。">
+<meta name="twitter:image" content="http://yoursite.com/2020/07/21/彻底理解windows认证/kdc.png">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -143,98 +149,139 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-彻底理解windows认证" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/19/php花式绕过技巧/" class="archive-article-date">
-  	<time datetime="2019-11-19T14:29:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-19</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/19/php花式绕过技巧/">php花式绕过技巧</a>
+    <h1 class="article-title" itemprop="name">
+      彻底理解windows认证
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2020/07/21/彻底理解windows认证/" class="archive-article-date">
+  	<time datetime="2020-07-21T15:44:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这是篇windows域相关的知识的学习笔记，来自倾旋大佬。标题也是我从他那偷的。<a id="more"></a><br>1、windows本地认证<br>就是自己的本地计算机登录过程。密码在C:\Windwos\System32\config\SAM里，登录时会进行比对。<br>密码的存储形式是NTLM哈希，32位数字字母。流程是hex-&gt;unicode-&gt;md4<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">admin -&gt; hex(16进制编码) = 61646d696e</div><div class="line">61646d696e -&gt; Unicode = 610064006d0069006e00</div><div class="line">610064006d0069006e00 -&gt; MD4 = 209c6174da490caeb422f3fa5a7ae634</div></pre></td></tr></table></figure></p>
+<p>winlogon进程接受账号密码，传给lsass进程计算哈希。<br>以前用的是LM hash，流程如下：<br>将密码转为大写<br>转16进制<br>补齐为14字节并切分成两个七字节<br>转为二进制<br>左边补0补齐56bit<br>7比特一组，分成8组，末尾加0<br>每组比特流转换为16进制作为key，对固定字符串KGS!@#$%进行des加密(这里倾旋大佬讲错了，把这个当成了key)，将结果拼接。<br>如果破解的话，破解过程实际是爆破des加密的密钥，因为des密钥限制在56bit，所以长度限制在了七位。还有个特点是如果密码长度不超过七位，后半段哈希是固定的AA-D3-B4-35-B5-14-04-EE<br>对比下来其实都是爆破，只是lm hash不区分大小写，最长14位，可以对两个七位分开爆破，爆破的难度小点。<br>2、windows网络认证<br>局域网内能互相通信的机器默认在一个工作组下，点对点认证，可以传输文件等。<br>工作组是逻辑概念，不同子网主机只要能通信就在一个工作组。<br>主要研究smb认证。smb最开始是明文传输口令，后来用LM(LAN Manager Challenge/Response)协议，再后来是NTLM协议和Kerberos协议<br>1)挑战/响应模式<br>LM协议和NTLM协议都采用这一模式<br>协议分三步：<br>协商：主要用于确认双方协议版本<br>质询：就是挑战（Chalenge）/响应（Response）认证机制起作用的范畴。<br>验证：验证主要是在质询完成后，验证结果，是认证的最后一步。<br>质询过程(LM/NTLMv1协议)：<br>1.客户端向服务器端发送用户信息(用户名)请求<br>2.服务器接受到请求，生成一个随机字符，称为”Challenge”， 使用登录用户名对应的LM/NTLM Hash作为密钥加密(简单变形后进行DES加密)Challenge， 生成Challenge1(在网络协议中称之为Net NTLM Hash)。同时，生成Challenge1后，将Challenge发送给客户端。<br>3.客户端接受到Challenge后，使用将要登录到账户对应的LM/NTLM Hash加密Challenge生成Response，然后将Response发送至服务器端。<br>验证： 服务器端收到客户端的Response后，比对Chanllenge1与Response是否相等，若相等，则认证通过。<br>其实就是在同一加密规则下，不泄露Hash明文的条件下比较NTLM Hash是否相同。<br><br>NTLM协议分为v1和v2两种，区别在于NTLM v1的Challenge有8位，NTLM v2的Challenge为16位。<br>以及加密challenge的过程，v1是简单变形后进行DES加密，v2是HMAC-MD5。<br>对于LM和NTLMv1协议，如果伪造一个server端，可以获取到Net NTLM Hash，这也是responder的原理。固定challange之后查彩虹表爆破des密钥就行了。<br>Net-NTLM v2就没啥好办法了，爆破看字典和命了。</p>
+<p>2)哈希传递(pass the hash/pth)<br>功能：使用NTLM Hash在不需要账号密码的情况下完成认证<br>从上面的质询过程中可以看出，认证过程全程是不需要密码明文的，只需要用户名和用户的NTLM Hash。所以可以利用服务器给的challenge自己计算个response通过服务器的认证，这个技巧就是哈希传递。很多工具都有这功能，Smbmap、<br>CrackMapExec、Smbexec、Metasploit等等。<br>3、域环境<br>1)活动目录(active directory)<br>活动目录存储了有关网络对象的信息，安装在域控上，对整个域进行管理，管理对象包括计算机、用户、资源、桌面等。<br>活动目录也就是域服务。<br>2)Kerberos认证协议<br>Kerberos是一种网络认证协议，其设计目标是通过密钥系统为客户机/服务器应用程序提供强大的认证服务。该认证过程的实现不依赖于主机操作系统的认证，并假定网络上传送的数据包可以被任意地读取、修改和插入数据。也就是说Kerberos可以抵抗中间人攻击。<br>Kerberos的含义是三头犬，代表client、server、KDC(Key Distribution Center)<br>认证中的凭证有两种：<br>TGT（Ticket Granting Ticket）：入场券，通过入场券能够获得票据，是一种临时凭证。不对应具体服务。<br>票据（Ticket）：是网络对象互相访问的凭证。对应具体服务。<br>大概就像吃自助，TGT是入场券，Ticket是某道菜的券(奇妙比喻)。所以明显TGT更值钱。<br>域控中和认证有关的有两部分<br>第一是AD(account database)，它存储所有client的白名单，只有存在于白名单的client才能顺利申请到TGT。<br>第二是KDC，分为两个服务<br>AS(Authentication Service): 为client生成TGT<br>TGS(Ticket Granting Service): 为client生成某个服务的ticket<br>域认证粗略流程：<br>Ⅰ client向KDC请求，希望获取TGT以访问某个server(这一步并没有指定server信息)。 KDC首先需要判断client是否是可信赖的， AS服务通过在AD中查询来判断client是否合法。查询合法后，AS返回TGT给client。<br>Ⅱ client得到了TGT后，带着TGT继续向KDC请求，希望获取访问指定server的权限。这个过程由TGS服务处理，TGS通过client 消息中的TGT，判断出了client拥有权限，给了client访问对应server的权限ticket。<br>Ⅲ client得到ticket后，就可以成功访问server。这个ticket只是针对这个server，访问其他server需要再向TGS申请。<br>从上述过程中可以看出，TGT是不对应具体server的，ticket对应具体的server。也就是说如果可以伪造TGT就可以申请任意server的ticket，登录任意server。<br><img src="/2020/07/21/彻底理解windows认证/kdc.png" alt="kdc.png" title=""><br>这个流程很粗略，缺少细节，接下来写下域认证的具体过程。为了简便，过程中很多重复出现的词我用了自己定义的符号缩写：<br>Ⅰ client申请TGT(Authentication Service Exchange)：<br>client向KDC的AS发送Authentication Service Request(KRB_AS_REQ)。KRB_AS_REQ的包含以下的内容：<br>Pre-authentication data，用来证明自己是自己声明的client，实现是用户名对应的NTLM Hash(记作Kc)加密的时间戳，这里记作Kc(timestamp)<br>client的name，记作c<br>server name，这个server并不是client要访问的server，因为TGT生成过程和server是无关的。这里是KDC的TGS的Server Name。记作S<br>client发送KRB_AS_REQ({c,S,Kc(timestamp)})给KDC，KDC在AD查找用户c对应NTLM Hash的Kc，获取Kc后对Pre-authentication data进行解密，验证时间戳。验证通过后KDC会生成一个随机字符串Session Key(记作Ks)，但KDC并不会存储这个Ks，也就是说后续过程KDC无法验证Ks的来源(这就是后面黄金票据的原理)。之后KDC返还KRB_AS_REP给client，KRB_AS_REP包含以下内容：<br>使用Kc对Ks加密得到的Kc(Ks)。<br>TGT，TGT是使用krbtgt用户的NTLM Hash(记作Kkdc)加密的，形式是Kkdc{Ks，c，endTime(TGT的到期时间)}。<br>Kc(Ks)和TGT会作为KRB_AS_REP一起返还给client。</p>
+<p>Ⅱ 客户端申请指定server的ticket(TGS（Ticket Granting Service）Exchange)<br>client拥有Kc，所以可以从Kc(Ks)解密获得Ks(Session key)。现在client有了Ks和TGT，向KDC中的TGS(Ticket Granting Service)发送Ticket Granting Service Request(KRB_TGS_REQ)。KRB_TGS_REQ大体包含以下的内容：<br>TGT，TGT是Kkdc加密的，只有KDC能解密，用来验证client这一步申请的合法性。<br>Authenticator，形式是Ks{c,s,timestamp}<br>client的name，记作c<br>server的name，这次是指定要访问的那个server了，记作s<br>获取到KRB_TGS_REQ({TGT,Ks{c,s,timestamp},c,s})后，TGS需要验证client提供的那个TGT是否是AS颁发给它的，也就是验证client提供的Authenticator。注意Authenticator使用了Ks进行加密，但KDC是没有办法直接解密的，因为KDC并没有存储Ks。所以KDC需要先使用Kkdc解密TGT获取其中的Ks，然后比对TGT中的c和该请求的c是否一致。验证通过后KDC会生成一个新的Session Key，叫做Server Session Key(记作Ks2)。之后会发送KRB_TGS_REP给client，内容如下：<br>使用Ks对Ks2加密得到的Ks(Ks2)<br>Ticket，Ticket是使用server的NTLM Hash(记作Kserver)加密的。形式是Kserver{Ks2，c，endTime(Ticket的到期时间)}。<br>可以看到其实Ticket和TGT形式是一样的，只是加密密钥变了。KRB_AS_REP({Kc(Ks),TGT})和KRB_TGS_REP({Ks(Ks2),Ticket})形式也是一样的。<br>至此client和KDC的通信过程结束，下面client直接和server通信。</p>
+<p>Ⅲ 利用Ticket登录server(CS（Client/Server ）Exchange)<br>客户端利用Ks解密获得Ks2，向server发送Application Service Request(KRB_AP_REQ)，KRB_AP_REQ包含以下内容：<br>Authenticator，形式是Ks2{c,timestamp}<br>Ticket，形式是Kserver{Ks2，c，endTime}<br>server使用自己的Kserver解密Ticket，获得Ks2。利用Ks2解密Authenticator中的c和ticket中的c是否一致，以及时间戳是否合法。校验通过后，认证成功，该票据会一直存在客户端内存中。<br>总的来说就是使用对称加密，验证密钥、时间戳和身份来确保合法性。<br>(终于写完了，想起来大三的时候学这段听天书的感觉了，爷青回。)</p>
+<p>接下来说说大家常说的白银票据和黄金票据<br>白银票据(Silver Tickets)的特点如下:<br>1.不需要与KDC进行交互<br>2.需要目标服务的NTLM Hash<br>在第三步认证中的Ticket的组成为Ticket=Kserver{Ks2，c，endTime}，所以当拥有Server Hash时，我们就可以伪造一个不经过KDC认证的一个Ticket。因为server是不知道Server Session Key是什么的。 所以，一切凭据都来源于Server Hash。<br>用mimikatz伪造白银票据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">首先需要导出Server Hash：</div><div class="line">C:\files&gt;mimikatz.exe <span class="string">"privilege::debug” "</span>sekurlsa::logonpasswords<span class="string">" "</span><span class="built_in">exit</span><span class="string">" &gt; log.txt</span></div><div class="line">伪造票据:</div><div class="line">mimikatz "kerberos::golden /domain:&lt;域名&gt; /sid:&lt;域 SID&gt; /target:&lt;目标服务器主机名&gt; /service:&lt;服务类型&gt; /rc4:&lt;NTLM Hash&gt; /user:&lt;用户名&gt; /ptt<span class="string">" exit</span></div></pre></td></tr></table></figure></p>
+<p>白银票据只能针对服务器上的某些服务去伪造，如WMI、Powershell、smb等等。<br>黄金票据(Golden Tickets)特点如下:<br>1.需要与KDC通信<br>2.需要krbtgt用户的hash<br>得到krbtgt用户的hash也就是前面的Kkdc之后，就可以伪造TGT。因为前面写了TGT=Kkdc{Ks，c，endTime}，而KDC并没有存储Ks，所以这个Ks可以任意写，只要拥有Kkdc就可以伪造合法的TGT。<br>伪造好TGT就可以向KDC申请任意server的Ticket，实现对整个域的持久控制。黄金票据虽然叫Ticket，但其实是TGT，并不是Ticket。<br>使用mimikatz生成黄金票据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mimikatz <span class="string">"kerberos::golden /domain:&lt;域名&gt; /sid:&lt;域SID&gt; /rc4:&lt;KRBTGT NTLM Hash&gt; /user:&lt;任意用户名&gt; /ptt"</span> <span class="built_in">exit</span></div></pre></td></tr></table></figure></p>
+<p>可以看出有了TGT就相当于有了某个用户的权限，所以还有种和哈希传递类似的攻击，叫做票据传递(Pass The Ticket)。原理是用户登陆到计算机时，Kerberos TGT本地存储在计算机上。在计算机上具有管理员权限的攻击者能够提取所有的TGT，并使用它在网络中不同的计算机之间横向移动。对服务来说这个叫非约束委派。</p>
+<p>4、Windows Access Token 简介<br>Windows Token其实叫Access Token(访问令牌)，它是一个描述进程或者线程安全上下文的一个对象。不同的用户登录计算机后， 都会生成一个Access Token，这个Token在用户创建进程或者线程 时会被使用，不断的拷贝。Access Token分为主令牌和模拟令牌用户注销后，系统将会使主令牌切换为模拟令牌，不会将令牌清除，只有在重启机器后才会清除。所以窃取令牌可以获得登陆过已注销的用户的权限。<br>可以使用多种工具查看目前系统上存在的模拟令牌:<br>Incognito<br>Powershell - Invoke-TokenManipulation.ps1<br>Cobalt Strike - steal_token<br>比如用meterpreter集成的incognito<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">meterpreter &gt; getsystem</div><div class="line">meterpreter &gt; load incognito meterpreter &gt; list_tokens –u</div><div class="line">meterpreter &gt; impersonate_token <span class="string">"PAYLOADS\\Administrator”</span></div></pre></td></tr></table></figure></p>
+<p>就可以获得域管权限。</p>
+<p>看了网上很多相关的文章，看着是中国字说的不是中国话，原理可能不太难，但是看名字真不知道是什么。整理了一下这些概念，算是入了个门。</p>
+<p>参考链接<br><a href="https://payloads.online/archivers/2018-11-30/1" target="_blank" rel="external">https://payloads.online/archivers/2018-11-30/1</a><br><a href="https://xz.aliyun.com/t/2445" target="_blank" rel="external">https://xz.aliyun.com/t/2445</a><br><a href="https://www.anquanke.com/post/id/194069" target="_blank" rel="external">https://www.anquanke.com/post/id/194069</a><br><a href="https://blog.csdn.net/wulantian/article/details/42418231" target="_blank" rel="external">https://blog.csdn.net/wulantian/article/details/42418231</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list">
 			 
         <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
+        	<a href="javascript:void(0)" class="article-tag-list-link color3">渗透</a>
         </li>
       
 		</ul>
 	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/05/python沙盒绕过&ssti一网打尽/" class="archive-article-date">
-  	<time datetime="2019-11-05T15:02:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/05/python沙盒绕过&ssti一网打尽/">python沙盒绕过&amp;ssti一网打尽</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
-        </li>
       
-		</ul>
-	</div>
 
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2020/07/21/彻底理解windows认证/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2020/07/15/逻辑漏洞部分实例总结/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">逻辑漏洞部分实例总结</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+    <div class="duoshuo"></div>
   
 
-    
+
 
 
           </div>
@@ -257,8 +304,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

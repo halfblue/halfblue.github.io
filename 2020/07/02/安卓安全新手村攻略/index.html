@@ -6,14 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2019/11 | Halfblue</title>
+  <title>安卓安全新手村攻略 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Halfblue">
-<meta property="og:url" content="http://yoursite.com/archives/2019/11/index.html">
+  <meta name="description" content="最近要测一些app，除了直接测web端也有覆盖移动端常见的漏洞，学学常见的安卓漏洞和drozer的用法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安卓安全新手村攻略">
+<meta property="og:url" content="http://yoursite.com/2020/07/02/安卓安全新手村攻略/index.html">
 <meta property="og:site_name" content="Halfblue">
+<meta property="og:description" content="最近要测一些app，除了直接测web端也有覆盖移动端常见的漏洞，学学常见的安卓漏洞和drozer的用法。">
+<meta property="og:updated_time" content="2020-07-10T13:00:52.715Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Halfblue">
+<meta name="twitter:title" content="安卓安全新手村攻略">
+<meta name="twitter:description" content="最近要测一些app，除了直接测web端也有覆盖移动端常见的漏洞，学学常见的安卓漏洞和drozer的用法。">
   
     <link rel="alternative" href="/atom.xml" title="Halfblue" type="application/atom+xml">
   
@@ -143,98 +147,139 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-安卓安全新手村攻略" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/19/php花式绕过技巧/" class="archive-article-date">
-  	<time datetime="2019-11-19T14:29:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-19</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/19/php花式绕过技巧/">php花式绕过技巧</a>
+    <h1 class="article-title" itemprop="name">
+      安卓安全新手村攻略
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2020/07/02/安卓安全新手村攻略/" class="archive-article-date">
+  	<time datetime="2020-07-02T13:26:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近要测一些app，除了直接测web端也有覆盖移动端常见的漏洞，学学常见的安卓漏洞和drozer的用法。<a id="more"></a><br>不懂安卓开发，所以只总结些不涉及代码的漏洞。<br>把apk改成zip解压，查看配置文件。查看AndroidManifest.xml，了解apk结构。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">查看permission信息,比如读写权限、网络权限等等。</div><div class="line">cat AndroidManifest.xml | grep permission</div><div class="line">查看是否允许debug</div><div class="line">cat AndroidManifest.xml | grep debug</div><div class="line">查看暴露的服务</div><div class="line">cat AndroidManifest.xml | grep exported</div></pre></td></tr></table></figure></p>
+<p>查看assets和res/raw/中是否有敏感信息。<br>然后连接手机开始调试，手机打开调试模式。安装adb和drozer，教程很多。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">连接drozer</div><div class="line">adb forward tcp:31415 tcp:31415</div><div class="line">drozer.bat console connect</div><div class="line">获取所有app名称</div><div class="line">adb</div><div class="line">adb shell pm list packages <span class="_">-f</span> name</div><div class="line">drozer</div><div class="line">run app.package.list <span class="_">-f</span> appname</div><div class="line">run app.package.list <span class="_">-a</span> packagename</div></pre></td></tr></table></figure></p>
+<p>简单的信息泄露漏洞：通过adb logcat查看本地记录，是否有明文银行卡身份证号等被记录。<br>安卓应用有四大组件：content providers、activities、broadcast providers、sservices。<br>activities可能有绕过的风险，比如登录界面被绕过。通过drozer测试：<br>run app.package.attacksurface target列出所有攻击面。<br>查看activity信息 run app.activity.info -a target<br>权限是null的话尝试直接调用activitiy，也许有未授权访问<br>run app.activity.start –component 应用全称 Activity名称<br>直接调用对应的activity。<br>还可能存在拒绝服务漏洞<br>adb shell am start  -n  target/activity<br>app退出运行即存在漏洞<br>测试sql注入<br>run app.provider.finduri target<br>run app.provider.query uri<br>run scanner.provider.injection -a target</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list">
 			 
         <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
+        	<a href="javascript:void(0)" class="article-tag-list-link color3">挖洞</a>
         </li>
       
 		</ul>
 	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/05/python沙盒绕过&ssti一网打尽/" class="archive-article-date">
-  	<time datetime="2019-11-05T15:02:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/05/python沙盒绕过&ssti一网打尽/">python沙盒绕过&amp;ssti一网打尽</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color4">CTF</a>
-        </li>
       
-		</ul>
-	</div>
 
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2020/07/02/安卓安全新手村攻略/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2020/07/15/逻辑漏洞部分实例总结/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          逻辑漏洞部分实例总结
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2020/06/03/springboot下rce的多种姿势/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">springboot下rce的多种姿势</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+  
+    <div class="duoshuo"></div>
   
 
-    
+
 
 
           </div>
@@ -257,8 +302,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
