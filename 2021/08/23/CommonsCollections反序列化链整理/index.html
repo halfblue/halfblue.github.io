@@ -8,16 +8,16 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>CommonsCollections反序列化链整理 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="整理下cc链，开局先上图">
+  <meta name="description" content="整理下cc链，开局先上图，做了好几个小时">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CommonsCollections反序列化链整理">
 <meta property="og:url" content="http://yoursite.com/2021/08/23/CommonsCollections%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E6%95%B4%E7%90%86/index.html">
 <meta property="og:site_name" content="Halfblue">
-<meta property="og:description" content="整理下cc链，开局先上图">
+<meta property="og:description" content="整理下cc链，开局先上图，做了好几个小时">
 <meta property="og:locale">
 <meta property="og:image" content="http://yoursite.com/2021/08/23/CommonsCollections%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E6%95%B4%E7%90%86/cc.png">
 <meta property="article:published_time" content="2021-08-23T15:53:21.000Z">
-<meta property="article:modified_time" content="2021-09-26T16:03:02.086Z">
+<meta property="article:modified_time" content="2021-09-26T16:22:00.120Z">
 <meta property="article:author" content="halfblue">
 <meta property="article:tag" content="java安全">
 <meta name="twitter:card" content="summary">
@@ -171,7 +171,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>整理下cc链，开局先上图<img src="/2021/08/23/CommonsCollections%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E6%95%B4%E7%90%86/cc.png" class=""><span id="more"></span><br>可以看出其实这么多条链都只是排列组合，基本没有非用哪条链不可的情况。这8条链里面，到执行点sink前有6条路径到使用ChainedTransformer.transform，一条路径到TransformingComparator.compare，共7种。而执行点中有3种执行方法，所以只从已有链出发就能推出21条链。<br>还可以添加新的元素，比如使用DefaultedMap代替LazyMap，或者添加URLClassLoader.loadClass作为执行点，都可以创造所谓的新的链条，但意义不大。</p>
+        <p>整理下cc链，开局先上图，做了好几个小时<img src="/2021/08/23/CommonsCollections%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E6%95%B4%E7%90%86/cc.png" class=""><span id="more"></span><br>可以看出其实这么多条链都只是排列组合，基本没有非用哪条链不可的情况。这8条链里面，到执行点sink前有6条路径到ChainedTransformer.transform，一条路径到TransformingComparator.compare，共7种。而执行点中有3种执行方法，所以只从已有链出发就能推出21条链。<br>还可以添加新的元素，比如使用DefaultedMap代替LazyMap，或者添加URLClassLoader.loadClass作为执行点，都可以创造所谓的新的链条，根据需求修改即可。</p>
 
       
 
