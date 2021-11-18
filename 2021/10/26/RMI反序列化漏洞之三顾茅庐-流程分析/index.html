@@ -6,18 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>RMI漏洞反序列化之三顾茅庐-流程分析 | Halfblue</title>
+  <title>RMI反序列化漏洞之三顾茅庐-流程分析 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="最近分析了下RMI相关的反序列化漏洞，查资料时发现许多分析文章都只关注漏洞点，对功能本身语焉不详。所以这篇文章先具体分析下RMI整体的调用流程，并且点出一些可能出现反序列化问题的地方。下篇写具体的漏洞利用。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RMI漏洞反序列化之三顾茅庐-流程分析">
+<meta property="og:title" content="RMI反序列化漏洞之三顾茅庐-流程分析">
 <meta property="og:url" content="http://yoursite.com/2021/10/26/RMI%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B9%8B%E4%B8%89%E9%A1%BE%E8%8C%85%E5%BA%90-%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Halfblue">
 <meta property="og:description" content="最近分析了下RMI相关的反序列化漏洞，查资料时发现许多分析文章都只关注漏洞点，对功能本身语焉不详。所以这篇文章先具体分析下RMI整体的调用流程，并且点出一些可能出现反序列化问题的地方。下篇写具体的漏洞利用。">
 <meta property="og:locale">
 <meta property="og:image" content="http://yoursite.com/2021/10/26/RMI%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B9%8B%E4%B8%89%E9%A1%BE%E8%8C%85%E5%BA%90-%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/UnicastRemoteObject.png">
 <meta property="article:published_time" content="2021-10-26T01:59:11.000Z">
-<meta property="article:modified_time" content="2021-11-18T11:48:13.098Z">
+<meta property="article:modified_time" content="2021-11-18T11:51:22.251Z">
 <meta property="article:author" content="halfblue">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2021/10/26/RMI%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B9%8B%E4%B8%89%E9%A1%BE%E8%8C%85%E5%BA%90-%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/UnicastRemoteObject.png">
@@ -157,7 +157,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      RMI漏洞反序列化之三顾茅庐-流程分析
+      RMI反序列化漏洞之三顾茅庐-流程分析
     </h1>
   
 
@@ -388,7 +388,7 @@
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          RMI漏洞反序列化之三顾茅庐-攻击实现
+          RMI反序列化漏洞之三顾茅庐-攻击实现
         
       </div>
     </a>
